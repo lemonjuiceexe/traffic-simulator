@@ -9,10 +9,14 @@
         "preview": "vite preview",
         "build:cli": "tsc --project tsconfig.cli.json",
         "run:cli": "node dist/cli/simulation.js",
-        "workflow": "npm run build:cli && npm run run:cli && npm run dev"
+        "watch:build:cli": "tsc --project tsconfig.cli.json --watch",
+        "watch:run:cli": "nodemon --watch dist/cli --ext js dist/cli/simulation.js",
+        "workflow": "npm-run-all --parallel watch:build:cli watch:run:cli dev"
     },
     "devDependencies": {
         "@types/node": "^24.0.4",
+        "nodemon": "^3.1.10",
+        "npm-run-all": "^4.1.5",
         "prettier": "3.6.1",
         "typescript": "~5.8.3",
         "vite": "^7.0.0"
