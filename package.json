@@ -1,0 +1,20 @@
+{
+    "name": "traffic-simulator",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc && vite build",
+        "preview": "vite preview",
+        "build:cli": "tsc --project tsconfig.cli.json",
+        "run:cli": "node dist/cli/simulation.js",
+        "workflow": "npm run build:cli && npm run run:cli && npm run dev"
+    },
+    "devDependencies": {
+        "@types/node": "^24.0.4",
+        "prettier": "3.6.1",
+        "typescript": "~5.8.3",
+        "vite": "^7.0.0"
+    }
+}

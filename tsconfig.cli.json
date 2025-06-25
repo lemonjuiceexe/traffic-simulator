@@ -1,0 +1,13 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "target": "es2020",
+        "outDir": "./dist/cli",
+        "noEmit": false,
+        "allowImportingTsExtensions": false
+    },
+    "include": ["cli/**/*.ts"],
+    "exclude": ["node_modules"]
+}
