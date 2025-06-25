@@ -4,10 +4,10 @@
         "module": "nodenext",
         "moduleResolution": "nodenext",
         "target": "es2020",
-        "outDir": "./dist/cli",
+        "outDir": "./dist/server",
         "noEmit": false,
         "allowImportingTsExtensions": false
     },
-    "include": ["cli/**/*.ts"],
+    "include": ["server/**/*.ts"],
     "exclude": ["node_modules"]
 }

@@ -7,11 +7,11 @@
         "dev": "vite",
         "build": "tsc && vite build",
         "preview": "vite preview",
-        "build:cli": "tsc --project tsconfig.cli.json",
-        "run:cli": "node dist/cli/simulation.js",
-        "watch:build:cli": "tsc --project tsconfig.cli.json --watch",
-        "watch:run:cli": "nodemon --watch dist/cli --ext js dist/cli/simulation.js",
-        "workflow": "npm-run-all --parallel watch:build:cli watch:run:cli dev"
+        "build:server": "tsc --project tsconfig.server.json",
+        "run:server": "node dist/server/simulation.js",
+        "watch:build:server": "tsc --project tsconfig.server.json --watch",
+        "watch:run:server": "nodemon --watch dist/server --ext js dist/server/simulation.js",
+        "workflow": "npm-run-all --parallel watch:build:server watch:run:server dev"
     },
     "devDependencies": {
         "@types/node": "^24.0.4",
