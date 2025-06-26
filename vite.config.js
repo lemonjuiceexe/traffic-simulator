@@ -19,7 +19,10 @@ export default defineConfig({
         }
     ],
     test: {
-        environment: "node"
+        environment: "node",
+        reporters: ["default", "junit"],
+        outputFile: "./junit.xml",
+        includeConsoleOutput: false
     },
     projects: [
         {
