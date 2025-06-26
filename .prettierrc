@@ -4,5 +4,6 @@
   "singleQuote": false,
   "trailingComma": "none",
   "bracketSpacing": true,
-  "quoteProps": "as-needed"
+  "quoteProps": "as-needed",
+  "printWidth": 110
 }

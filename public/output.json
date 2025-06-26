@@ -1,0 +1,10 @@
+{
+    "currentStep": 4,
+    "north": [{ "id": "vehicle2", "startRoad": "north", "endRoad": "south", "arrivedAtStep": 0 }],
+    "east": [],
+    "south": [{ "id": "vehicle1", "startRoad": "south", "endRoad": "north", "arrivedAtStep": 0 }],
+    "west": [
+        { "id": "vehicle3", "startRoad": "west", "endRoad": "south", "arrivedAtStep": 2 },
+        { "id": "vehicle4", "startRoad": "west", "endRoad": "south", "arrivedAtStep": 2 }
+    ]
+}
