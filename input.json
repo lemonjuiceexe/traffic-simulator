@@ -28,7 +28,7 @@
             "type": "addVehicle",
             "vehicleId": "vehicle4",
             "startRoad": "west",
-            "endRoad": "south"
+            "endRoad": "north"
         },
         {
             "type": "step"

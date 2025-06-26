@@ -1,17 +1,19 @@
 import { describe, test, expect, beforeEach } from "vitest";
-import { type IntersectionState } from "./types";
-import { processCommand } from "./simulation";
+import {
+    directionsAreEqual,
+    getRoadsWaitingTimes,
+    getBestDirectionSet,
+    processCommand
+} from "./simulation.js";
+import { type IntersectionState, type Direction } from "./types.js";
+import { allowedDirections } from "./directions.js";
 
 describe("processCommand", () => {
     let intersectionState: IntersectionState;
-
     beforeEach(() => {
         intersectionState = {
             currentStep: 0,
-            north: [],
-            east: [],
-            south: [],
-            west: []
+            vehicles: []
         };
     });
 
@@ -20,7 +22,9 @@ describe("processCommand", () => {
             { type: "addVehicle", vehicleId: "v1", startRoad: "north", endRoad: "east" },
             intersectionState
         );
-        expect(result.north).toEqual([{ id: "v1", endRoad: "east", arrivedAtStep: 0 }]);
+        expect(result.vehicles).toEqual([
+            { id: "v1", direction: { start: "north", end: "east" }, arrivedAtStep: 0 }
+        ]);
         expect(result.currentStep).toBe(0);
     });
 
@@ -48,10 +52,95 @@ describe("processCommand", () => {
             state
         );
         expect(state.currentStep).toBe(2);
-        expect(state.north).toEqual([
-            { id: "v1", endRoad: "east", arrivedAtStep: 0 },
-            { id: "v2", endRoad: "east", arrivedAtStep: 0 }
+        expect(state.vehicles).toEqual([
+            { id: "v1", direction: { start: "north", end: "east" }, arrivedAtStep: 0 },
+            { id: "v2", direction: { start: "north", end: "east" }, arrivedAtStep: 0 },
+            { id: "v2", direction: { start: "south", end: "west" }, arrivedAtStep: 2 }
         ]);
-        expect(state.south).toEqual([{ id: "v2", endRoad: "west", arrivedAtStep: 2 }]);
+    });
+});
+
+describe("processStep", () => {
+    test("should increment currentStep", () => {
+        const initialState: IntersectionState = {
+            currentStep: 0,
+            vehicles: []
+        };
+        const result = processCommand({ type: "step" }, initialState);
+        expect(result.currentStep).toBe(1);
+    });
+});
+describe("getBestDirectionSet", () => {
+    test("should return set from allowedDirections array", () => {
+        let intersectionState: IntersectionState = {
+            currentStep: 4,
+            vehicles: [
+                { id: "v1", direction: { start: "north", end: "east" }, arrivedAtStep: 0 },
+                { id: "v2", direction: { start: "south", end: "west" }, arrivedAtStep: 2 },
+                { id: "v3", direction: { start: "east", end: "north" }, arrivedAtStep: 1 }
+            ]
+        };
+        let result = getBestDirectionSet(intersectionState);
+        expect(allowedDirections.includes(result)).toBe(true);
+    });
+    test("should return directions with the highest waiting times", () => {
+        let intersectionState: IntersectionState = {
+            currentStep: 50,
+            vehicles: [
+                { id: "v1", direction: { start: "west", end: "east" }, arrivedAtStep: 0 },
+                { id: "v2", direction: { start: "east", end: "west" }, arrivedAtStep: 21 },
+                { id: "v3", direction: { start: "east", end: "north" }, arrivedAtStep: 40 },
+                { id: "v4", direction: { start: "west", end: "south" }, arrivedAtStep: 48 }
+            ]
+        };
+        let result = getBestDirectionSet(intersectionState);
+        expect(
+            result.some((d) => d.start === "west" && d.end === "east") &&
+                result.some((d) => d.start === "east" && d.end === "west")
+        ).toBe(true);
+    });
+});
+describe("getRoadsWaitingTimes", () => {
+    test("should calculate waiting times for each road", () => {
+        let intersectionState: IntersectionState = {
+            currentStep: 4,
+            vehicles: [
+                { id: "v1", direction: { start: "north", end: "east" }, arrivedAtStep: 0 },
+                { id: "v2", direction: { start: "south", end: "west" }, arrivedAtStep: 2 }
+            ]
+        };
+        let result = getRoadsWaitingTimes(intersectionState);
+        expect(result).toEqual({
+            north: 4,
+            east: 0,
+            south: 2,
+            west: 0
+        });
+    });
+    test("should sum waiting times for one road", () => {
+        let intersectionState: IntersectionState = {
+            currentStep: 5,
+            vehicles: [
+                { id: "v1", direction: { start: "north", end: "east" }, arrivedAtStep: 0 },
+                { id: "v2", direction: { start: "north", end: "west" }, arrivedAtStep: 1 },
+                { id: "v3", direction: { start: "north", end: "east" }, arrivedAtStep: 3 }
+            ]
+        };
+        let result = getRoadsWaitingTimes(intersectionState);
+        expect(result).toEqual({
+            north: 11,
+            east: 0,
+            south: 0,
+            west: 0
+        });
+    });
+});
+describe("directionsAreEqual", () => {
+    test("should compare directions correctly", () => {
+        const direction1 = { start: "north", end: "east" } as Direction;
+        const direction2 = { start: "north", end: "east" } as Direction;
+        const direction3 = { start: "south", end: "west" } as Direction;
+        expect(directionsAreEqual(direction1, direction2)).toBe(true);
+        expect(directionsAreEqual(direction1, direction3)).toBe(false);
     });
 });

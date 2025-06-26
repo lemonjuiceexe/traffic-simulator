@@ -1,15 +1,16 @@
 export type Road = "north" | "east" | "south" | "west";
+export type Direction = {
+    start: Road;
+    end: Road;
+};
 export type Vehicle = {
     id: string;
-    endRoad: Road;
+    direction: Direction;
     arrivedAtStep: number;
 };
 export type IntersectionState = {
     currentStep: number;
-    north: Vehicle[];
-    east: Vehicle[];
-    south: Vehicle[];
-    west: Vehicle[];
+    vehicles: Vehicle[];
 };
 
 export type AddVehicleCommand = {
