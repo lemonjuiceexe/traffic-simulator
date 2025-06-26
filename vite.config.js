@@ -17,5 +17,22 @@ export default defineConfig({
                 });
             }
         }
+    ],
+    test: {
+        environment: "node"
+    },
+    projects: [
+        {
+            name: "frontend-vite",
+            root: "./src",
+            environment: "jsdom",
+            include: ["**/*.test.ts, **/*.spec.ts"]
+        },
+        {
+            name: "server",
+            root: "./server",
+            environment: "node",
+            include: ["**/*.test.ts", "**/*.spec.ts"]
+        }
     ]
 });

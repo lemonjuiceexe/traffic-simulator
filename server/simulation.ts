@@ -20,7 +20,7 @@ console.log(JSON.stringify(intersectionState));
 
 fs.writeFileSync(output_path, "");
 
-function processCommand(
+export function processCommand(
     command: InputCommand,
     currentIntersectionState: IntersectionState
 ): IntersectionState {
