@@ -23,3 +23,7 @@ type StepCommand = {
     type: "step";
 };
 export type InputCommand = AddVehicleCommand | StepCommand;
+
+export type OutputData = {
+    stepStatuses: [{ leftVehicles: string[] | [] }?];
+};

@@ -46,17 +46,15 @@ describe("processCommand", () => {
             state
         );
         state = processCommand({ type: "step" }, state);
-        state = processCommand({ type: "step" }, state);
         state = processCommand(
-            { type: "addVehicle", vehicleId: "v2", startRoad: "south", endRoad: "west" },
+            { type: "addVehicle", vehicleId: "v3", startRoad: "south", endRoad: "west" },
             state
         );
-        expect(state.currentStep).toBe(2);
-        expect(state.vehicles).toEqual([
-            { id: "v1", direction: { start: "north", end: "east" }, arrivedAtStep: 0 },
-            { id: "v2", direction: { start: "north", end: "east" }, arrivedAtStep: 0 },
-            { id: "v2", direction: { start: "south", end: "west" }, arrivedAtStep: 2 }
-        ]);
+        expect(state.currentStep).toBe(1);
+        expect(
+            state.vehicles.some((v) => v.id === "v2" && v.arrivedAtStep === 0) &&
+                state.vehicles.some((v) => v.id === "v3" && v.arrivedAtStep === 1)
+        ).toBe(true);
     });
 });
 
@@ -68,6 +66,30 @@ describe("processStep", () => {
         };
         const result = processCommand({ type: "step" }, initialState);
         expect(result.currentStep).toBe(1);
+    });
+    test("only one vehicle with given start should leave at a time", () => {
+        let intersectionState: IntersectionState = {
+            currentStep: 2,
+            vehicles: [
+                { id: "v1", direction: { start: "north", end: "east" }, arrivedAtStep: 0 },
+                { id: "v2", direction: { start: "north", end: "east" }, arrivedAtStep: 0 }
+            ]
+        };
+        intersectionState = processCommand({ type: "step" }, intersectionState);
+        expect(intersectionState.vehicles.length).toBe(1);
+    });
+    test("multiple vehicles with different directions can leave at a time", () => {
+        let intersectionState: IntersectionState = {
+            currentStep: 3,
+            vehicles: [
+                { id: "v1", direction: { start: "north", end: "west" }, arrivedAtStep: 0 },
+                { id: "v2", direction: { start: "west", end: "south" }, arrivedAtStep: 0 },
+                { id: "v3", direction: { start: "south", end: "east" }, arrivedAtStep: 0 },
+                { id: "v4", direction: { start: "east", end: "north" }, arrivedAtStep: 0 }
+            ]
+        };
+        intersectionState = processCommand({ type: "step" }, intersectionState);
+        expect(intersectionState.vehicles.length).toBe(0);
     });
 });
 describe("getBestDirectionSet", () => {

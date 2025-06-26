@@ -1,6 +1,7 @@
 import fs from "fs";
 import {
     type InputCommand,
+    type OutputData,
     type Vehicle,
     type IntersectionState,
     type Direction,
@@ -17,14 +18,23 @@ export function simulate(inputPath: string, outputPath: string): void {
         vehicles: []
     };
 
+    let outputData: OutputData = {
+        stepStatuses: []
+    };
+
     data.forEach((command: InputCommand) => {
+        const previousIntersectionState: IntersectionState = intersectionState;
         intersectionState = processCommand(command, intersectionState);
+        if (command.type === "step") {
+            const vehiclesIdLeft: string[] = previousIntersectionState.vehicles
+                .filter((v) => !intersectionState.vehicles.some((v1) => v1.id === v.id))
+                .map((v) => v.id);
+            outputData.stepStatuses.push({ leftVehicles: vehiclesIdLeft });
+        }
     });
 
-    console.log(allowedDirections);
-
     fs.writeFileSync(outputPath, "");
-    fs.appendFileSync(outputPath, JSON.stringify(intersectionState, null, 2));
+    fs.appendFileSync(outputPath, JSON.stringify(outputData, null, 2));
 }
 
 export function processCommand(
@@ -54,8 +64,23 @@ export function processStep(currentIntersectionState: IntersectionState): Inters
     newIntersectionState.currentStep = newIntersectionState.currentStep + 1;
 
     const bestDirectionSet = getBestDirectionSet(newIntersectionState);
-    console.log("BEST", bestDirectionSet);
-    console.log("----------------------");
+    // console.log("BEST", bestDirectionSet);
+    // console.log("----------------------");
+    let vehiclesLeftFrom: Record<Road, boolean> = {
+        north: false,
+        east: false,
+        south: false,
+        west: false
+    };
+    for (const vehicle of newIntersectionState.vehicles) {
+        if (
+            bestDirectionSet.some((direction) => directionsAreEqual(direction, vehicle.direction)) &&
+            !vehiclesLeftFrom[vehicle.direction.start]
+        ) {
+            newIntersectionState.vehicles = newIntersectionState.vehicles.filter((v) => v.id !== vehicle.id);
+            vehiclesLeftFrom[vehicle.direction.start] = true;
+        }
+    }
 
     return newIntersectionState;
 }
