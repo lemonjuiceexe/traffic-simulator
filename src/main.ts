@@ -17,9 +17,6 @@ document.querySelector("p.read-the-docs")!.addEventListener("click", () => {
     window.open("https://vitejs.dev/guide/features.html", "_blank", "noopener");
 });
 
-console.log("AAAAAA");
 fetch("/output.json")
     .then((res) => res.json())
-    .then(
-        (data) => (document.querySelector(".result")!.textContent = data["a"])
-    );
+    .then((data) => (document.querySelector(".result")!.textContent = data["a"]));

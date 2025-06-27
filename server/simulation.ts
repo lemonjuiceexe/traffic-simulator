@@ -50,6 +50,10 @@ export function simulate(inputPath: string, outputPath: string): void {
 
     fs.writeFileSync(outputPath, "");
     fs.appendFileSync(outputPath, JSON.stringify(outputData, null, 2));
+    if (outputPath !== "public/output.json") {
+        fs.writeFileSync("public/output.json", "");
+        fs.appendFileSync("public/output.json", JSON.stringify(outputData, null, 2));
+    }
 }
 
 export function processCommand(
