@@ -122,9 +122,9 @@ export function getBestDirectionSet(intersectionState: IntersectionState): Direc
         let currentScore = 0;
         directionSet.forEach((direction) => {
             if (scoredFirstDirectionsToGo.some((el) => directionsAreEqual(el.direction, direction))) {
-                currentScore +=
-                    scoredFirstDirectionsToGo.find((el) => directionsAreEqual(el.direction, direction))
-                        ?.score || 0;
+                currentScore += scoredFirstDirectionsToGo.find((el) =>
+                    directionsAreEqual(el.direction, direction)
+                )!.score;
             }
         });
         bestResult =

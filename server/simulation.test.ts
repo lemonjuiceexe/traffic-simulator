@@ -1,12 +1,48 @@
-import { describe, test, expect, beforeEach } from "vitest";
+import { describe, test, expect, beforeEach, afterEach } from "vitest";
 import {
     directionsAreEqual,
     getRoadsWaitingTimes,
     getBestDirectionSet,
-    processCommand
+    processCommand,
+    getCLIArguments
 } from "./simulation.js";
 import { type IntersectionState, type Direction } from "./types.js";
 import { allowedDirections } from "./directions.js";
+
+describe("getCLIArguments", () => {
+    const originalArgv = process.argv;
+    afterEach(() => {
+        process.argv = originalArgv;
+    });
+
+    test("should return default paths when no arguments provided", () => {
+        process.argv = ["node", "simulation.js"];
+        const args = getCLIArguments();
+        expect(args).toEqual({ inputPath: "input.json", outputPath: "output.json" });
+    });
+    test("should parse --inputFile and --outputFile arguments", () => {
+        process.argv = [
+            "node",
+            "simulation.js",
+            "--inputFile",
+            "customInput.json",
+            "--outputFile",
+            "customOutput.json"
+        ];
+        const args = getCLIArguments();
+        expect(args).toEqual({ inputPath: "customInput.json", outputPath: "customOutput.json" });
+    });
+    test("should properly parse only --inputFile argument", () => {
+        process.argv = ["node", "simulation.js", "--inputFile", "myInput.json"];
+        const args = getCLIArguments();
+        expect(args).toEqual({ inputPath: "myInput.json", outputPath: "output.json" });
+    });
+    test("should properly parse only --outputFile argument", () => {
+        process.argv = ["node", "simulation.js", "--outputFile", "myOutput.json"];
+        const args = getCLIArguments();
+        expect(args).toEqual({ inputPath: "input.json", outputPath: "myOutput.json" });
+    });
+});
 
 describe("processCommand", () => {
     let intersectionState: IntersectionState;
@@ -118,7 +154,12 @@ describe("getBestDirectionSet", () => {
         let result = getBestDirectionSet(intersectionState);
         expect(
             result.some((d) => d.start === "west" && d.end === "east") &&
-                result.some((d) => d.start === "east" && d.end === "west")
+                result.some((d) => d.start === "east" && d.end === "west") &&
+                allowedDirections.some(
+                    (directionSet) =>
+                        directionSet.some((d) => d.start === "east" && d.end === "north") &&
+                        directionSet.some((d) => d.start === "west" && d.end === "south")
+                )
         ).toBe(true);
     });
 });
