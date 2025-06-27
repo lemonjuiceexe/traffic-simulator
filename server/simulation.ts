@@ -9,9 +9,24 @@ import {
 } from "./types.js";
 import { allowedDirections } from "./directions.js";
 
-simulate("input.json", "output.json");
+const { inputPath, outputPath } = getCLIArguments();
+simulate(inputPath, outputPath);
 
+export function getCLIArguments(): { inputPath: string; outputPath: string } {
+    const args: string[] = process.argv.slice(2);
+    const inputPath: string = args.includes("--inputFile")
+        ? args[args.indexOf("--inputFile") + 1]
+        : "input.json";
+    const outputPath: string = args.includes("--outputFile")
+        ? args[args.indexOf("--outputFile") + 1]
+        : "output.json";
+
+    return { inputPath, outputPath };
+}
 export function simulate(inputPath: string, outputPath: string): void {
+    const args = process.argv.slice(2);
+    console.log("Arguments:", args);
+
     const data: InputCommand[] = JSON.parse(fs.readFileSync(inputPath, "utf-8"))["commands"];
     let intersectionState: IntersectionState = {
         currentStep: 0,
