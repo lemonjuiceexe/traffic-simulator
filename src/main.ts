@@ -1,22 +1,18 @@
+import { type OutputData } from "../server/types.ts";
+import { drawBackground } from "./draw.ts";
 import "./style.css";
 
-document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-    <div>
-        <h1>Vite + TypeScript</h1>
-        <div class="card">
-            <button id="counter" type="button">CLICKME</button>
-        </div>
-        <p class="read-the-docs">
-            Click on the Vite and TypeScript logos to learn more
-        </p>
-        <p class="result">waiting for file...</p>
-  </div>
-`;
+startSimulation();
 
-document.querySelector("p.read-the-docs")!.addEventListener("click", () => {
-    window.open("https://vitejs.dev/guide/features.html", "_blank", "noopener");
-});
-
-fetch("/output.json")
-    .then((res) => res.json())
-    .then((data) => (document.querySelector(".result")!.textContent = data["a"]));
+function startSimulation(): void {
+    fetch("/output.json")
+        .then((res: Response): Promise<OutputData> => res.json())
+        .then((data: OutputData): void => {
+            renderSimulation(data);
+        });
+}
+function renderSimulation(data: OutputData): void {
+    const canvas: HTMLCanvasElement = document.querySelector("#canvas")!;
+    const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
+    drawBackground(ctx);
+}
