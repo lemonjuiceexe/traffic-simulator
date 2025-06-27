@@ -2,6 +2,7 @@ import fs from "fs";
 import {
     type InputCommand,
     type OutputData,
+    type SimulationStep,
     type Vehicle,
     type IntersectionState,
     type Direction,
@@ -24,7 +25,7 @@ export function getCLIArguments(): { inputPath: string; outputPath: string } {
     return { inputPath, outputPath };
 }
 export function simulate(inputPath: string, outputPath: string): void {
-    const data: InputCommand[] = JSON.parse(fs.readFileSync(inputPath, "utf-8"))["commands"];
+    const inputCommands: InputCommand[] = JSON.parse(fs.readFileSync(inputPath, "utf-8"))["commands"];
     let intersectionState: IntersectionState = {
         currentStep: 0,
         vehicles: []
@@ -33,8 +34,12 @@ export function simulate(inputPath: string, outputPath: string): void {
     let outputData: OutputData = {
         stepStatuses: []
     };
-
-    data.forEach((command: InputCommand) => {
+    let simulationData: SimulationStep[] = [];
+    let currentStepData: SimulationStep = {
+        vehicles: [],
+        greenDirections: []
+    };
+    inputCommands.forEach((command: InputCommand) => {
         const previousIntersectionState: IntersectionState = intersectionState;
         intersectionState = processCommand(command, intersectionState);
         if (command.type === "step") {
@@ -42,15 +47,22 @@ export function simulate(inputPath: string, outputPath: string): void {
                 .filter((v) => !intersectionState.vehicles.some((v1) => v1.id === v.id))
                 .map((v) => v.id);
             outputData.stepStatuses.push({ leftVehicles: vehiclesIdLeft });
+            currentStepData.vehicles = previousIntersectionState.vehicles;
+            currentStepData.greenDirections = getBestDirectionSet(previousIntersectionState);
+            simulationData.push(currentStepData);
+            currentStepData = {
+                vehicles: [],
+                greenDirections: []
+            };
         }
     });
 
+    // Output file
     fs.writeFileSync(outputPath, "");
     fs.appendFileSync(outputPath, JSON.stringify(outputData, null, 2));
-    if (outputPath !== "public/output.json") {
-        fs.writeFileSync("public/output.json", "");
-        fs.appendFileSync("public/output.json", JSON.stringify(outputData, null, 2));
-    }
+    // Simulation data file
+    fs.writeFileSync("public/output.json", "");
+    fs.appendFileSync("public/output.json", JSON.stringify(simulationData, null, 2));
 }
 
 export function processCommand(
@@ -141,7 +153,8 @@ export function getRoadsWaitingTimes(intersectionState: IntersectionState): Reco
         west: 0
     };
     intersectionState.vehicles.forEach((vehicle) => {
-        sumOfWaitingTimes[vehicle.direction.start] += intersectionState.currentStep - vehicle.arrivedAtStep;
+        sumOfWaitingTimes[vehicle.direction.start] +=
+            intersectionState.currentStep - vehicle.arrivedAtStep + 1;
     });
 
     return sumOfWaitingTimes;

@@ -27,3 +27,7 @@ export type InputCommand = AddVehicleCommand | StepCommand;
 export type OutputData = {
     stepStatuses: [{ leftVehicles: string[] | [] }?];
 };
+export type SimulationStep = {
+    vehicles: Vehicle[];
+    greenDirections: Direction[];
+};

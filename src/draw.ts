@@ -104,25 +104,26 @@ export function drawBackground(ctx: CanvasRenderingContext2D): void {
     ctx.stroke();
 
     const trafficLightSize: CanvasVector = {
-        x: 40,
-        y: 60
+        x: 60,
+        y: 70
     };
     const centerX: number = ctx.canvas.width / 2;
     const centerY: number = ctx.canvas.height / 2;
-    const offset: number = 70;
+    const offset: number = 80;
 
-    const trafficLightsPositions: CanvasVector[] = [
-        { x: centerX - offset - trafficLightSize.x, y: centerY - trafficLightSize.y / 2 }, // left
-        { x: centerX + offset, y: centerY - trafficLightSize.y / 2 }, // right
-        { x: centerX - trafficLightSize.x / 2, y: centerY - offset - trafficLightSize.y }, // top
-        { x: centerX - trafficLightSize.x / 2, y: centerY + offset } // bottom
+    const trafficLightPositions: CanvasVector[] = [
+        { x: centerX - offset - trafficLightSize.x, y: centerY - trafficLightSize.y / 2 },
+        { x: centerX + offset, y: centerY - trafficLightSize.y / 2 },
+        { x: centerX - trafficLightSize.x / 2, y: centerY - offset - trafficLightSize.y },
+        { x: centerX - trafficLightSize.x / 2, y: centerY + offset }
     ];
-    for (const pos of trafficLightsPositions) {
-        // traffic light body
+
+    trafficLightPositions.forEach((pos) => {
+        // Draw traffic light box
         ctx.fillStyle = "#333";
         ctx.fillRect(pos.x, pos.y, trafficLightSize.x, trafficLightSize.y);
 
-        ["red", "yellow", "green"].forEach((color, index) => {
+        ["red", "yellow"].forEach((color, index) => {
             ctx.fillStyle = color;
             ctx.beginPath();
             ctx.arc(
@@ -134,5 +135,19 @@ export function drawBackground(ctx: CanvasRenderingContext2D): void {
             );
             ctx.fill();
         });
-    }
+        // Draw three green lights: left, forward, right
+        const greenY = pos.y + (3 * trafficLightSize.y) / 4;
+        const greenRadius = Math.min(trafficLightSize.x, trafficLightSize.y) / 8;
+        const greenOffsets = [
+            trafficLightSize.x / 4, // left
+            trafficLightSize.x / 2, // forward
+            (3 * trafficLightSize.x) / 4 // right
+        ];
+        greenOffsets.forEach((offsetX) => {
+            ctx.fillStyle = "green";
+            ctx.beginPath();
+            ctx.arc(pos.x + offsetX, greenY, greenRadius, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    });
 }

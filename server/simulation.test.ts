@@ -157,9 +157,23 @@ describe("getBestDirectionSet", () => {
                 result.some((d) => d.start === "east" && d.end === "west") &&
                 allowedDirections.some(
                     (directionSet) =>
-                        directionSet.some((d) => d.start === "east" && d.end === "north") &&
-                        directionSet.some((d) => d.start === "west" && d.end === "south")
+                        directionSet.some((d) => d.start === "west" && d.end === "east") &&
+                        directionSet.some((d) => d.start === "east" && d.end === "west")
                 )
+        ).toBe(true);
+    });
+    test("should return directions with the highest waiting times #2", () => {
+        let intersectionState: IntersectionState = {
+            currentStep: 0,
+            vehicles: [
+                { id: "v1", direction: { start: "north", end: "south" }, arrivedAtStep: 0 },
+                { id: "v2", direction: { start: "south", end: "north" }, arrivedAtStep: 0 }
+            ]
+        };
+        let result = getBestDirectionSet(intersectionState);
+        expect(
+            result.some((d) => d.start === "north" && d.end === "south") &&
+                result.some((d) => d.start === "south" && d.end === "north")
         ).toBe(true);
     });
 });
@@ -174,9 +188,9 @@ describe("getRoadsWaitingTimes", () => {
         };
         let result = getRoadsWaitingTimes(intersectionState);
         expect(result).toEqual({
-            north: 4,
+            north: 4 + 1,
             east: 0,
-            south: 2,
+            south: 2 + 1,
             west: 0
         });
     });
@@ -191,7 +205,7 @@ describe("getRoadsWaitingTimes", () => {
         };
         let result = getRoadsWaitingTimes(intersectionState);
         expect(result).toEqual({
-            north: 11,
+            north: 11 + 3,
             east: 0,
             south: 0,
             west: 0
