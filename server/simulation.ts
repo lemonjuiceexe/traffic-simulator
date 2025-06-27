@@ -24,9 +24,6 @@ export function getCLIArguments(): { inputPath: string; outputPath: string } {
     return { inputPath, outputPath };
 }
 export function simulate(inputPath: string, outputPath: string): void {
-    const args = process.argv.slice(2);
-    console.log("Arguments:", args);
-
     const data: InputCommand[] = JSON.parse(fs.readFileSync(inputPath, "utf-8"))["commands"];
     let intersectionState: IntersectionState = {
         currentStep: 0,
@@ -83,8 +80,6 @@ export function processStep(currentIntersectionState: IntersectionState): Inters
     newIntersectionState.currentStep = newIntersectionState.currentStep + 1;
 
     const bestDirectionSet = getBestDirectionSet(newIntersectionState);
-    // console.log("BEST", bestDirectionSet);
-    // console.log("----------------------");
     let vehiclesLeftFrom: Record<Road, boolean> = {
         north: false,
         east: false,
@@ -111,7 +106,6 @@ export function getBestDirectionSet(intersectionState: IntersectionState): Direc
         if (firstDirectionsToGo.some((direction) => vehicle.direction.start === direction.start)) return;
         firstDirectionsToGo.push(vehicle.direction);
     });
-    console.log("FTG", firstDirectionsToGo);
     const scoredFirstDirectionsToGo: { direction: Direction; score: number }[] = firstDirectionsToGo.map(
         (direction: Direction) => {
             return {
