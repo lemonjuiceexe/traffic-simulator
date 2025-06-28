@@ -9,24 +9,96 @@
         {
             "type": "addVehicle",
             "vehicleId": "vehicle2",
-            "startRoad": "north",
-            "endRoad": "south"
-        },
-        {
-            "type": "step"
-        },
-        {
-            "type": "step"
+            "startRoad": "south",
+            "endRoad": "north"
         },
         {
             "type": "addVehicle",
             "vehicleId": "vehicle3",
-            "startRoad": "west",
+            "startRoad": "north",
             "endRoad": "south"
         },
         {
             "type": "addVehicle",
             "vehicleId": "vehicle4",
+            "startRoad": "north",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle5",
+            "startRoad": "west",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle6",
+            "startRoad": "west",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle7",
+            "startRoad": "east",
+            "endRoad": "north"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle8",
+            "startRoad": "east",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle9",
+            "startRoad": "east",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle100",
+            "startRoad": "east",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle101",
+            "startRoad": "east",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle102",
+            "startRoad": "east",
+            "endRoad": "south"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle10",
+            "startRoad": "west",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle11",
+            "startRoad": "south",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle12",
+            "startRoad": "south",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "vehicle13",
             "startRoad": "west",
             "endRoad": "north"
         },

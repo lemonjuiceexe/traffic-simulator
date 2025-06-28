@@ -3,20 +3,58 @@
     {
       "leftVehicles": [
         "vehicle1",
-        "vehicle2"
-      ]
-    },
-    {
-      "leftVehicles": []
-    },
-    {
-      "leftVehicles": [
-        "vehicle3"
+        "vehicle3",
+        "vehicle5",
+        "vehicle7"
       ]
     },
     {
       "leftVehicles": [
-        "vehicle4"
+        "vehicle6",
+        "vehicle8"
+      ]
+    },
+    {
+      "leftVehicles": [
+        "vehicle9"
+      ]
+    },
+    {
+      "leftVehicles": [
+        "vehicle100"
+      ]
+    },
+    {
+      "leftVehicles": [
+        "vehicle101"
+      ]
+    },
+    {
+      "leftVehicles": [
+        "vehicle102"
+      ]
+    },
+    {
+      "leftVehicles": [
+        "vehicle103"
+      ]
+    },
+    {
+      "leftVehicles": [
+        "vehicle104"
+      ]
+    },
+    {
+      "leftVehicles": [
+        "vehicle2",
+        "vehicle4",
+        "vehicle10"
+      ]
+    },
+    {
+      "leftVehicles": [
+        "vehicle105",
+        "vehicle13"
       ]
     }
   ]
