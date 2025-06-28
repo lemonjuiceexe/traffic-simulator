@@ -1,8 +1,11 @@
 import { type Road, type SimulationStep, type Vehicle } from "../server/types.ts";
 import {
     calculateFirstVehiclePosition,
+    calculateVehicleEndPosition,
     drawBackground,
     drawVehicle,
+    getVehicleCurvePoints,
+    interpolateVehiclePosition,
     type Vector,
     vehicleRadius
 } from "./draw.ts";
@@ -98,26 +101,34 @@ async function animateVehicles(
 ) {
     const startPositions: Record<string, Vector> = {};
     const endPositions: Record<string, Vector> = {};
+    const curveData: Record<string, { control: Vector; isCurve: boolean }> = {};
     for (const vehicle of movingVehicles) {
         const { startRoad, endRoad } = { startRoad: vehicle.direction.start, endRoad: vehicle.direction.end };
         startPositions[startRoad] = calculateFirstVehiclePosition(ctx.canvas)[startRoad];
-        endPositions[startRoad] = calculateFirstVehiclePosition(ctx.canvas)[endRoad];
+        endPositions[startRoad] = calculateVehicleEndPosition(ctx.canvas)[endRoad];
+        const start = startPositions[startRoad];
+        const end = endPositions[startRoad];
+        curveData[startRoad + "-" + endRoad] = getVehicleCurvePoints(start, end, startRoad, endRoad);
     }
-
+    const duration = 1500; // ms
     const startTime = performance.now();
+    const skipMoving = new Set(movingVehicles);
     await new Promise<void>((resolve) => {
         function animateFrame(now: number) {
             const elapsed = now - startTime;
-            const progress = Math.min(elapsed / animationDuration, 1);
+            const progress = Math.min(elapsed / duration, 1);
             drawBackground(ctx);
-            drawStationaryVehicles(ctx, step, new Set(movingVehicles));
+            drawStationaryVehicles(ctx, step, skipMoving);
             for (const vehicle of movingVehicles) {
-                const startRoad = vehicle.direction.start;
+                const { startRoad, endRoad } = {
+                    startRoad: vehicle.direction.start,
+                    endRoad: vehicle.direction.end
+                };
                 const start = startPositions[startRoad];
                 const end = endPositions[startRoad];
-                const x = start.x + (end.x - start.x) * progress;
-                const y = start.y + (end.y - start.y) * progress;
-                drawVehicle(ctx, x, y, "#0f0");
+                const { control, isCurve } = curveData[startRoad + "-" + endRoad];
+                const pos = interpolateVehiclePosition(start, control, end, progress, isCurve);
+                drawVehicle(ctx, pos.x, pos.y, "#0f0");
             }
             if (progress < 1) {
                 requestAnimationFrame(animateFrame);

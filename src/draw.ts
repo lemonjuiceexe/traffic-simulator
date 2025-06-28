@@ -29,6 +29,27 @@ export function calculateFirstVehiclePosition(canvas: HTMLCanvasElement): Record
         }
     };
 }
+export function calculateVehicleEndPosition(canvas: HTMLCanvasElement): Record<Road, Vector> {
+    const firstVehiclePosition: Record<Road, Vector> = calculateFirstVehiclePosition(canvas);
+    return {
+        north: {
+            x: firstVehiclePosition.north.x + roadGap + roadWidth,
+            y: firstVehiclePosition.north.y
+        },
+        south: {
+            x: firstVehiclePosition.south.x - roadGap - roadWidth,
+            y: firstVehiclePosition.south.y
+        },
+        east: {
+            x: firstVehiclePosition.east.x,
+            y: firstVehiclePosition.east.y + roadGap + roadWidth
+        },
+        west: {
+            x: firstVehiclePosition.west.x,
+            y: firstVehiclePosition.west.y - roadGap - roadWidth
+        }
+    };
+}
 export function drawVehicle(ctx: CanvasRenderingContext2D, x: number, y: number, color: string = "#f00") {
     ctx.fillStyle = color;
     ctx.beginPath();
@@ -137,4 +158,63 @@ export function drawBackground(ctx: CanvasRenderingContext2D): void {
     //         ctx.fill();
     //     });
     // });
+}
+
+export function getVehicleCurvePoints(
+    start: Vector,
+    end: Vector,
+    startRoad: Road,
+    endRoad: Road
+): { control: Vector; isCurve: boolean } {
+    const isStraightLine =
+        (startRoad === "north" && endRoad === "south") ||
+        (startRoad === "south" && endRoad === "north") ||
+        (startRoad === "east" && endRoad === "west") ||
+        (startRoad === "west" && endRoad === "east");
+    const isLeftTurn =
+        (startRoad === "north" && endRoad === "west") ||
+        (startRoad === "west" && endRoad === "south") ||
+        (startRoad === "south" && endRoad === "east") ||
+        (startRoad === "east" && endRoad === "north");
+    if (isStraightLine) {
+        return {
+            control: { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 },
+            isCurve: false
+        };
+    }
+    if (isLeftTurn) {
+        return {
+            control: {
+                x: (start.x + end.x) / 2 + ((end.y - start.y) / 2) * 0.7,
+                y: (start.y + end.y) / 2 - ((end.x - start.x) / 2) * 0.7
+            },
+            isCurve: true
+        };
+    }
+    return {
+        control: {
+            x: (start.x + end.x) / 2 - ((end.y - start.y) / 2) * 0.7,
+            y: (start.y + end.y) / 2 + ((end.x - start.x) / 2) * 0.7
+        },
+        isCurve: true
+    };
+}
+
+export function interpolateVehiclePosition(
+    start: Vector,
+    control: Vector,
+    end: Vector,
+    t: number,
+    isCurve: boolean
+): Vector {
+    if (!isCurve) {
+        return {
+            x: start.x + (end.x - start.x) * t,
+            y: start.y + (end.y - start.y) * t
+        };
+    }
+    return {
+        x: (1 - t) * (1 - t) * start.x + 2 * (1 - t) * t * control.x + t * t * end.x,
+        y: (1 - t) * (1 - t) * start.y + 2 * (1 - t) * t * control.y + t * t * end.y
+    };
 }
