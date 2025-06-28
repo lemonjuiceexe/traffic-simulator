@@ -29,8 +29,8 @@ export function calculateFirstVehiclePosition(canvas: HTMLCanvasElement): Record
         }
     };
 }
-export function drawVehicle(ctx: CanvasRenderingContext2D, x: number, y: number) {
-    ctx.fillStyle = "#f00";
+export function drawVehicle(ctx: CanvasRenderingContext2D, x: number, y: number, color: string = "#f00") {
+    ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(x, y, vehicleRadius, 0, Math.PI * 2);
     ctx.fill();

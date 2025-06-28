@@ -8,6 +8,7 @@ import {
     type Direction,
     type Road
 } from "./types.js";
+import { directionsAreEqual } from "./helpers.js";
 import { allowedDirections } from "./directions.js";
 
 const { inputPath, outputPath } = getCLIArguments();
@@ -158,7 +159,4 @@ export function getRoadsWaitingTimes(intersectionState: IntersectionState): Reco
     });
 
     return sumOfWaitingTimes;
-}
-export function directionsAreEqual(a: Direction, b: Direction): boolean {
-    return a.start === b.start && a.end === b.end;
 }

@@ -21,3 +21,10 @@ h1{
 	top: 10px;
 	font-size: 40px;
 }
+.desc{
+	position: absolute;
+	left: 10px;
+	top: 60px;
+	font-size: 20px;
+	color: #666;
+}

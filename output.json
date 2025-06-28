@@ -16,44 +16,13 @@
     },
     {
       "leftVehicles": [
-        "vehicle9"
-      ]
-    },
-    {
-      "leftVehicles": [
-        "vehicle100"
-      ]
-    },
-    {
-      "leftVehicles": [
-        "vehicle101"
-      ]
-    },
-    {
-      "leftVehicles": [
-        "vehicle102"
-      ]
-    },
-    {
-      "leftVehicles": [
-        "vehicle103"
-      ]
-    },
-    {
-      "leftVehicles": [
-        "vehicle104"
-      ]
-    },
-    {
-      "leftVehicles": [
-        "vehicle2",
-        "vehicle4",
+        "vehicle9",
         "vehicle10"
       ]
     },
     {
       "leftVehicles": [
-        "vehicle105",
+        "vehicle100",
         "vehicle13"
       ]
     }

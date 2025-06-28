@@ -1,12 +1,6 @@
 import { describe, test, expect, beforeEach, afterEach } from "vitest";
-import {
-    directionsAreEqual,
-    getRoadsWaitingTimes,
-    getBestDirectionSet,
-    processCommand,
-    getCLIArguments
-} from "./simulation.js";
-import { type IntersectionState, type Direction } from "./types.js";
+import { getRoadsWaitingTimes, getBestDirectionSet, processCommand, getCLIArguments } from "./simulation.js";
+import { type IntersectionState } from "./types.js";
 import { allowedDirections } from "./directions.js";
 
 describe("getCLIArguments", () => {
@@ -210,14 +204,5 @@ describe("getRoadsWaitingTimes", () => {
             south: 0,
             west: 0
         });
-    });
-});
-describe("directionsAreEqual", () => {
-    test("should compare directions correctly", () => {
-        const direction1 = { start: "north", end: "east" } as Direction;
-        const direction2 = { start: "north", end: "east" } as Direction;
-        const direction3 = { start: "south", end: "west" } as Direction;
-        expect(directionsAreEqual(direction1, direction2)).toBe(true);
-        expect(directionsAreEqual(direction1, direction3)).toBe(false);
     });
 });
