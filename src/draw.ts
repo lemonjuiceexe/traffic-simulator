@@ -119,12 +119,12 @@ export function drawBackground(ctx: CanvasRenderingContext2D): void {
     const centerY: number = ctx.canvas.height / 2;
     const offset: number = 80;
 
-    const trafficLightPositions: Vector[] = [
-        { x: centerX - offset - trafficLightSize.x, y: centerY - trafficLightSize.y / 2 },
-        { x: centerX + offset, y: centerY - trafficLightSize.y / 2 },
-        { x: centerX - trafficLightSize.x / 2, y: centerY - offset - trafficLightSize.y },
-        { x: centerX - trafficLightSize.x / 2, y: centerY + offset }
-    ];
+    // const trafficLightPositions: Vector[] = [
+    //     { x: centerX - offset - trafficLightSize.x, y: centerY - trafficLightSize.y / 2 },
+    //     { x: centerX + offset, y: centerY - trafficLightSize.y / 2 },
+    //     { x: centerX - trafficLightSize.x / 2, y: centerY - offset - trafficLightSize.y },
+    //     { x: centerX - trafficLightSize.x / 2, y: centerY + offset }
+    // ];
 
     // trafficLightPositions.forEach((pos) => {
     //     // Draw traffic light box

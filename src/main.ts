@@ -15,6 +15,10 @@ import "./style.css";
 const animationDuration = 1500;
 const delayBetweenSteps = 500;
 const currentStepSpan: HTMLSpanElement = document.querySelector("#step")!;
+const nextStepButton: HTMLButtonElement = document.querySelector("#next-step-button")!;
+const restartButton: HTMLButtonElement = document.querySelector("#restart-button")!;
+restartButton.addEventListener("click", restartSimulation);
+
 startSimulation();
 
 function startSimulation(): void {
@@ -33,8 +37,21 @@ async function renderSimulation(data: SimulationStep[]): Promise<void> {
         const step: SimulationStep = data[i];
         currentStepSpan.textContent = `${i}`;
         await renderStep(ctx, step);
-        await new Promise((r) => setTimeout(r, delayBetweenSteps));
+        // await new Promise((r) => setTimeout(r, delayBetweenSteps));
+        await waitForButtonClick(nextStepButton);
     }
+}
+function waitForButtonClick(buttonElement: HTMLButtonElement): Promise<void> {
+    return new Promise((resolve) =>
+        buttonElement.addEventListener("click", () => {
+            resolve();
+        })
+    );
+}
+function restartSimulation(): void {
+    currentStepSpan.textContent = "0";
+    nextStepButton.disabled = false;
+    startSimulation();
 }
 
 async function renderStep(ctx: CanvasRenderingContext2D, step: SimulationStep) {
