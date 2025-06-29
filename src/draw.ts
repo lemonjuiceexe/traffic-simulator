@@ -180,50 +180,29 @@ export function getVehiclePath(ctx: CanvasRenderingContext2D, startRoad: Road, e
 
     const startPosition = calculateFirstVehiclePosition(ctx.canvas)[startRoad];
     const endPosition = calculateVehicleEndPosition(ctx.canvas)[endRoad];
-    if (isStraightLine) {
-        return [
-            {
-                start: {
-                    x: startPosition.x,
-                    y: startPosition.y
-                },
-                end: {
-                    x: endPosition.x,
-                    y: endPosition.y
-                }
-            }
-        ];
-    }
+
+    let offset = 0;
     if (isRightTurn) {
-        return [
-            {
-                start: {
-                    x: startPosition.x,
-                    y: startPosition.y
-                },
-                end: {
-                    x: endPosition.x,
-                    y: endPosition.y - 40
-                }
-            },
-            {
-                start: {
-                    x: endPosition.x,
-                    y: endPosition.y - 40
-                },
-                end: {
-                    x: endPosition.x,
-                    y: endPosition.y
-                }
-            }
-        ];
+        offset = (vehicleRadius * 2 + roadWidth / 2) * (["north", "west"].includes(startRoad) ? 1 : -1);
+    } else if (isLeftTurn) {
+        offset =
+            (vehicleRadius * 2 + roadGap + (roadWidth * 3) / 2) *
+            (["north", "west"].includes(startRoad) ? 1 : -1);
     }
+    const turnPosition: PathSegment = {
+        start: {
+            x: startPosition.x,
+            y: startPosition.y
+        },
+        end: {
+            x: ["west", "east"].includes(startRoad) ? startPosition.x + offset : startPosition.x,
+            y: ["north", "south"].includes(startRoad) ? startPosition.y + offset : startPosition.y
+        }
+    };
     return [
+        turnPosition,
         {
-            start: {
-                x: startPosition.x,
-                y: startPosition.y
-            },
+            start: { ...turnPosition.end },
             end: {
                 x: endPosition.x,
                 y: endPosition.y
