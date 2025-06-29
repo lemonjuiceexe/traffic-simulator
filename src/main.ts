@@ -4,8 +4,9 @@ import {
     calculateVehicleEndPosition,
     drawBackground,
     drawVehicle,
-    getVehicleCurvePoints,
+    getVehiclePath,
     interpolateVehiclePosition,
+    type PathSegment,
     type Vector,
     vehicleRadius
 } from "./draw.ts";
@@ -117,36 +118,47 @@ async function animateVehicles(
     step: SimulationStep,
     movingVehicles: Vehicle[]
 ) {
-    const startPositions: Record<string, Vector> = {};
-    const endPositions: Record<string, Vector> = {};
-    const curveData: Record<string, { control: Vector; isCurve: boolean }> = {};
+    const paths: Record<string, PathSegment[]> = {};
     for (const vehicle of movingVehicles) {
-        const { startRoad, endRoad } = { startRoad: vehicle.direction.start, endRoad: vehicle.direction.end };
-        startPositions[startRoad] = calculateFirstVehiclePosition(ctx.canvas)[startRoad];
-        endPositions[startRoad] = calculateVehicleEndPosition(ctx.canvas)[endRoad];
-        const start = startPositions[startRoad];
-        const end = endPositions[startRoad];
-        curveData[startRoad + "-" + endRoad] = getVehicleCurvePoints(start, end, startRoad, endRoad);
+        const startRoad = vehicle.direction.start;
+        const endRoad = vehicle.direction.end;
+        paths[startRoad + "-" + endRoad] = getVehiclePath(ctx, startRoad, endRoad);
     }
-    const duration = 1500; // ms
+
     const startTime = performance.now();
-    const skipMoving = new Set(movingVehicles);
     await new Promise<void>((resolve) => {
         function animateFrame(now: number) {
             const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
+            const progress = Math.min(elapsed / animationDuration, 1);
             drawBackground(ctx);
-            drawStationaryVehicles(ctx, step, skipMoving);
+            drawStationaryVehicles(ctx, step, new Set(movingVehicles));
             for (const vehicle of movingVehicles) {
-                const { startRoad, endRoad } = {
-                    startRoad: vehicle.direction.start,
-                    endRoad: vehicle.direction.end
-                };
-                const start = startPositions[startRoad];
-                const end = endPositions[startRoad];
-                const { control, isCurve } = curveData[startRoad + "-" + endRoad];
-                const pos = interpolateVehiclePosition(start, control, end, progress, isCurve);
-                drawVehicle(ctx, pos.x, pos.y, "#0f0");
+                const segments: PathSegment[] = paths[vehicle.direction.start + "-" + vehicle.direction.end];
+                const segmentLengths: number[] = segments.map((segment) => {
+                    const dx = segment.end.x - segment.start.x;
+                    const dy = segment.end.y - segment.start.y;
+                    return Math.sqrt(dx * dx + dy * dy);
+                });
+                const pathLength = segmentLengths.reduce((a, b) => a + b, 0);
+                const totalDistance = progress * pathLength;
+                let vehiclePosition: Vector = { ...segments[0].start };
+                if (segments.length > 0) {
+                    let distanceLeft = totalDistance;
+                    for (let i = 0; i < segments.length; ++i) {
+                        if (segmentLengths[i] === 0) continue;
+                        if (distanceLeft <= segmentLengths[i]) {
+                            const seg = segments[i];
+                            const localT = distanceLeft / segmentLengths[i];
+                            vehiclePosition = {
+                                x: seg.start.x + (seg.end.x - seg.start.x) * localT,
+                                y: seg.start.y + (seg.end.y - seg.start.y) * localT
+                            };
+                            break;
+                        }
+                        distanceLeft -= segmentLengths[i];
+                    }
+                }
+                drawVehicle(ctx, vehiclePosition.x, vehiclePosition.y, "#0f0");
             }
             if (progress < 1) {
                 requestAnimationFrame(animateFrame);

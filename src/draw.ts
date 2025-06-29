@@ -4,6 +4,10 @@ export type Vector = {
     x: number;
     y: number;
 };
+export type PathSegment = {
+    start: Vector;
+    end: Vector;
+};
 
 const roadWidth: number = 60;
 const roadGap: number = 40;
@@ -160,61 +164,77 @@ export function drawBackground(ctx: CanvasRenderingContext2D): void {
     // });
 }
 
-export function getVehicleCurvePoints(
-    start: Vector,
-    end: Vector,
-    startRoad: Road,
-    endRoad: Road
-): { control: Vector; isCurve: boolean } {
+export function getVehiclePath(ctx: CanvasRenderingContext2D, startRoad: Road, endRoad: Road): PathSegment[] {
     const isStraightLine =
         (startRoad === "north" && endRoad === "south") ||
         (startRoad === "south" && endRoad === "north") ||
         (startRoad === "east" && endRoad === "west") ||
         (startRoad === "west" && endRoad === "east");
-    const isLeftTurn =
+    const isRightTurn =
         (startRoad === "north" && endRoad === "west") ||
         (startRoad === "west" && endRoad === "south") ||
         (startRoad === "south" && endRoad === "east") ||
         (startRoad === "east" && endRoad === "north");
+    const isUTurn = startRoad === endRoad;
+    const isLeftTurn = !isStraightLine && !isRightTurn && !isUTurn;
+
+    const startPosition = calculateFirstVehiclePosition(ctx.canvas)[startRoad];
+    const endPosition = calculateVehicleEndPosition(ctx.canvas)[endRoad];
     if (isStraightLine) {
-        return {
-            control: { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 },
-            isCurve: false
-        };
+        return [
+            {
+                start: {
+                    x: startPosition.x,
+                    y: startPosition.y
+                },
+                end: {
+                    x: endPosition.x,
+                    y: endPosition.y
+                }
+            }
+        ];
     }
-    if (isLeftTurn) {
-        return {
-            control: {
-                x: (start.x + end.x) / 2 + ((end.y - start.y) / 2) * 0.7,
-                y: (start.y + end.y) / 2 - ((end.x - start.x) / 2) * 0.7
+    if (isRightTurn) {
+        return [
+            {
+                start: {
+                    x: startPosition.x,
+                    y: startPosition.y
+                },
+                end: {
+                    x: endPosition.x,
+                    y: endPosition.y - 40
+                }
             },
-            isCurve: true
-        };
+            {
+                start: {
+                    x: endPosition.x,
+                    y: endPosition.y - 40
+                },
+                end: {
+                    x: endPosition.x,
+                    y: endPosition.y
+                }
+            }
+        ];
     }
-    return {
-        control: {
-            x: (start.x + end.x) / 2 - ((end.y - start.y) / 2) * 0.7,
-            y: (start.y + end.y) / 2 + ((end.x - start.x) / 2) * 0.7
-        },
-        isCurve: true
-    };
+    return [
+        {
+            start: {
+                x: startPosition.x,
+                y: startPosition.y
+            },
+            end: {
+                x: endPosition.x,
+                y: endPosition.y
+            }
+        }
+    ];
 }
 
-export function interpolateVehiclePosition(
-    start: Vector,
-    control: Vector,
-    end: Vector,
-    t: number,
-    isCurve: boolean
-): Vector {
-    if (!isCurve) {
-        return {
-            x: start.x + (end.x - start.x) * t,
-            y: start.y + (end.y - start.y) * t
-        };
-    }
+export function interpolateVehiclePosition(start: Vector, end: Vector, t: number): Vector {
     return {
-        x: (1 - t) * (1 - t) * start.x + 2 * (1 - t) * t * control.x + t * t * end.x,
-        y: (1 - t) * (1 - t) * start.y + 2 * (1 - t) * t * control.y + t * t * end.y
+        x: start.x + (end.x - start.x) * t,
+        y: start.y + (end.y - start.y) * t
     };
 }
