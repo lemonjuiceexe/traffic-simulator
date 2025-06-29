@@ -38,18 +38,18 @@ export function calculateVehicleEndPosition(canvas: HTMLCanvasElement): Record<R
     return {
         north: {
             x: firstVehiclePosition.north.x + roadGap + roadWidth,
-            y: firstVehiclePosition.north.y
+            y: 0 - vehicleRadius
         },
         south: {
             x: firstVehiclePosition.south.x - roadGap - roadWidth,
-            y: firstVehiclePosition.south.y
+            y: canvas.height + vehicleRadius
         },
         east: {
-            x: firstVehiclePosition.east.x,
+            x: canvas.width + vehicleRadius,
             y: firstVehiclePosition.east.y + roadGap + roadWidth
         },
         west: {
-            x: firstVehiclePosition.west.x,
+            x: 0 - vehicleRadius,
             y: firstVehiclePosition.west.y - roadGap - roadWidth
         }
     };
@@ -181,6 +181,41 @@ export function getVehiclePath(ctx: CanvasRenderingContext2D, startRoad: Road, e
     const startPosition = calculateFirstVehiclePosition(ctx.canvas)[startRoad];
     const endPosition = calculateVehicleEndPosition(ctx.canvas)[endRoad];
 
+    if (isUTurn) {
+        const offset1 =
+            (vehicleRadius * 2 + roadWidth / 2) * (["north", "west"].includes(startRoad) ? 1 : -1);
+        const offset2 =
+            (vehicleRadius * 2 + roadGap + roadWidth / 2) * (["north", "east"].includes(startRoad) ? 1 : -1);
+        let turnPosition1: PathSegment = {
+            start: {
+                x: startPosition.x,
+                y: startPosition.y
+            },
+            end: {
+                x: startPosition.x + (["west", "east"].includes(startRoad) ? offset1 : 0),
+                y: startPosition.y + (["north", "south"].includes(startRoad) ? offset1 : 0)
+            }
+        };
+        const turnPosition2: PathSegment = {
+            start: { ...turnPosition1.end },
+            end: {
+                x: turnPosition1.end.x + (["north", "south"].includes(startRoad) ? offset2 : 0),
+                y: turnPosition1.end.y + (["west", "east"].includes(startRoad) ? offset2 : 0)
+            }
+        };
+        return [
+            turnPosition1,
+            turnPosition2,
+            {
+                start: { ...turnPosition2.end },
+                end: {
+                    x: endPosition.x,
+                    y: endPosition.y
+                }
+            }
+        ];
+    }
+
     let offset = 0;
     if (isRightTurn) {
         offset = (vehicleRadius * 2 + roadWidth / 2) * (["north", "west"].includes(startRoad) ? 1 : -1);
@@ -195,8 +230,8 @@ export function getVehiclePath(ctx: CanvasRenderingContext2D, startRoad: Road, e
             y: startPosition.y
         },
         end: {
-            x: ["west", "east"].includes(startRoad) ? startPosition.x + offset : startPosition.x,
-            y: ["north", "south"].includes(startRoad) ? startPosition.y + offset : startPosition.y
+            x: startPosition.x + (["west", "east"].includes(startRoad) ? offset : 0),
+            y: startPosition.y + (["north", "south"].includes(startRoad) ? offset : 0)
         }
     };
     return [

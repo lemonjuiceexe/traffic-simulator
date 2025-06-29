@@ -2,6 +2,188 @@
   {
     "vehicles": [
       {
+        "id": "uturn1",
+        "direction": {
+          "start": "north",
+          "end": "north"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "uturn2",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "uturn3",
+        "direction": {
+          "start": "west",
+          "end": "west"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "uturn4",
+        "direction": {
+          "start": "east",
+          "end": "east"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle1",
+        "direction": {
+          "start": "south",
+          "end": "north"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle2",
+        "direction": {
+          "start": "south",
+          "end": "north"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle3",
+        "direction": {
+          "start": "north",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle4",
+        "direction": {
+          "start": "north",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle5",
+        "direction": {
+          "start": "west",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle6",
+        "direction": {
+          "start": "west",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle7",
+        "direction": {
+          "start": "east",
+          "end": "north"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle8",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle9",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle100",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle101",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle102",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      }
+    ],
+    "greenDirections": [
+      {
+        "start": "west",
+        "end": "north"
+      },
+      {
+        "start": "west",
+        "end": "west"
+      },
+      {
+        "start": "east",
+        "end": "south"
+      },
+      {
+        "start": "east",
+        "end": "east"
+      },
+      {
+        "start": "north",
+        "end": "west"
+      },
+      {
+        "start": "west",
+        "end": "south"
+      },
+      {
+        "start": "south",
+        "end": "east"
+      },
+      {
+        "start": "east",
+        "end": "north"
+      }
+    ]
+  },
+  {
+    "vehicles": [
+      {
+        "id": "uturn1",
+        "direction": {
+          "start": "north",
+          "end": "north"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "uturn2",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
         "id": "vehicle1",
         "direction": {
           "start": "south",
@@ -101,11 +283,19 @@
     "greenDirections": [
       {
         "start": "south",
-        "end": "north"
+        "end": "west"
+      },
+      {
+        "start": "south",
+        "end": "south"
       },
       {
         "start": "north",
-        "end": "south"
+        "end": "east"
+      },
+      {
+        "start": "north",
+        "end": "north"
       },
       {
         "start": "north",
@@ -128,10 +318,26 @@
   {
     "vehicles": [
       {
+        "id": "vehicle1",
+        "direction": {
+          "start": "south",
+          "end": "north"
+        },
+        "arrivedAtStep": 0
+      },
+      {
         "id": "vehicle2",
         "direction": {
           "start": "south",
           "end": "north"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle3",
+        "direction": {
+          "start": "north",
+          "end": "south"
         },
         "arrivedAtStep": 0
       },
@@ -155,92 +361,6 @@
         "id": "vehicle8",
         "direction": {
           "start": "east",
-          "end": "south"
-        },
-        "arrivedAtStep": 0
-      },
-      {
-        "id": "vehicle9",
-        "direction": {
-          "start": "east",
-          "end": "south"
-        },
-        "arrivedAtStep": 0
-      },
-      {
-        "id": "vehicle100",
-        "direction": {
-          "start": "east",
-          "end": "south"
-        },
-        "arrivedAtStep": 0
-      },
-      {
-        "id": "vehicle101",
-        "direction": {
-          "start": "east",
-          "end": "south"
-        },
-        "arrivedAtStep": 0
-      },
-      {
-        "id": "vehicle102",
-        "direction": {
-          "start": "east",
-          "end": "south"
-        },
-        "arrivedAtStep": 0
-      }
-    ],
-    "greenDirections": [
-      {
-        "start": "west",
-        "end": "north"
-      },
-      {
-        "start": "west",
-        "end": "west"
-      },
-      {
-        "start": "east",
-        "end": "south"
-      },
-      {
-        "start": "east",
-        "end": "east"
-      },
-      {
-        "start": "north",
-        "end": "west"
-      },
-      {
-        "start": "west",
-        "end": "south"
-      },
-      {
-        "start": "south",
-        "end": "east"
-      },
-      {
-        "start": "east",
-        "end": "north"
-      }
-    ]
-  },
-  {
-    "vehicles": [
-      {
-        "id": "vehicle2",
-        "direction": {
-          "start": "south",
-          "end": "north"
-        },
-        "arrivedAtStep": 0
-      },
-      {
-        "id": "vehicle4",
-        "direction": {
-          "start": "north",
           "end": "south"
         },
         "arrivedAtStep": 0
@@ -348,6 +468,242 @@
   {
     "vehicles": [
       {
+        "id": "vehicle1",
+        "direction": {
+          "start": "south",
+          "end": "north"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle2",
+        "direction": {
+          "start": "south",
+          "end": "north"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle3",
+        "direction": {
+          "start": "north",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle4",
+        "direction": {
+          "start": "north",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle9",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle100",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle101",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle102",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle10",
+        "direction": {
+          "start": "west",
+          "end": "south"
+        },
+        "arrivedAtStep": 2
+      },
+      {
+        "id": "vehicle11",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 2
+      },
+      {
+        "id": "vehicle12",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 2
+      },
+      {
+        "id": "vehicle13",
+        "direction": {
+          "start": "west",
+          "end": "north"
+        },
+        "arrivedAtStep": 2
+      }
+    ],
+    "greenDirections": [
+      {
+        "start": "south",
+        "end": "north"
+      },
+      {
+        "start": "north",
+        "end": "south"
+      },
+      {
+        "start": "north",
+        "end": "west"
+      },
+      {
+        "start": "west",
+        "end": "south"
+      },
+      {
+        "start": "south",
+        "end": "east"
+      },
+      {
+        "start": "east",
+        "end": "north"
+      }
+    ]
+  },
+  {
+    "vehicles": [
+      {
+        "id": "vehicle2",
+        "direction": {
+          "start": "south",
+          "end": "north"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle4",
+        "direction": {
+          "start": "north",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle9",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle100",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle101",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle102",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle11",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 2
+      },
+      {
+        "id": "vehicle12",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 2
+      },
+      {
+        "id": "vehicle13",
+        "direction": {
+          "start": "west",
+          "end": "north"
+        },
+        "arrivedAtStep": 2
+      }
+    ],
+    "greenDirections": [
+      {
+        "start": "west",
+        "end": "north"
+      },
+      {
+        "start": "west",
+        "end": "west"
+      },
+      {
+        "start": "east",
+        "end": "south"
+      },
+      {
+        "start": "east",
+        "end": "east"
+      },
+      {
+        "start": "north",
+        "end": "west"
+      },
+      {
+        "start": "west",
+        "end": "south"
+      },
+      {
+        "start": "south",
+        "end": "east"
+      },
+      {
+        "start": "east",
+        "end": "north"
+      }
+    ]
+  },
+  {
+    "vehicles": [
+      {
         "id": "vehicle2",
         "direction": {
           "start": "south",
@@ -402,12 +758,256 @@
           "end": "south"
         },
         "arrivedAtStep": 2
+      }
+    ],
+    "greenDirections": [
+      {
+        "start": "south",
+        "end": "north"
       },
       {
-        "id": "vehicle13",
+        "start": "north",
+        "end": "south"
+      },
+      {
+        "start": "north",
+        "end": "west"
+      },
+      {
+        "start": "west",
+        "end": "south"
+      },
+      {
+        "start": "south",
+        "end": "east"
+      },
+      {
+        "start": "east",
+        "end": "north"
+      }
+    ]
+  },
+  {
+    "vehicles": [
+      {
+        "id": "vehicle100",
         "direction": {
-          "start": "west",
-          "end": "north"
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle101",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle102",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle11",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 2
+      },
+      {
+        "id": "vehicle12",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 2
+      }
+    ],
+    "greenDirections": [
+      {
+        "start": "west",
+        "end": "north"
+      },
+      {
+        "start": "west",
+        "end": "west"
+      },
+      {
+        "start": "east",
+        "end": "south"
+      },
+      {
+        "start": "east",
+        "end": "east"
+      },
+      {
+        "start": "north",
+        "end": "west"
+      },
+      {
+        "start": "west",
+        "end": "south"
+      },
+      {
+        "start": "south",
+        "end": "east"
+      },
+      {
+        "start": "east",
+        "end": "north"
+      }
+    ]
+  },
+  {
+    "vehicles": [
+      {
+        "id": "vehicle101",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle102",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle11",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 2
+      },
+      {
+        "id": "vehicle12",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 2
+      }
+    ],
+    "greenDirections": [
+      {
+        "start": "west",
+        "end": "north"
+      },
+      {
+        "start": "west",
+        "end": "west"
+      },
+      {
+        "start": "east",
+        "end": "south"
+      },
+      {
+        "start": "east",
+        "end": "east"
+      },
+      {
+        "start": "north",
+        "end": "west"
+      },
+      {
+        "start": "west",
+        "end": "south"
+      },
+      {
+        "start": "south",
+        "end": "east"
+      },
+      {
+        "start": "east",
+        "end": "north"
+      }
+    ]
+  },
+  {
+    "vehicles": [
+      {
+        "id": "vehicle102",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle11",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 2
+      },
+      {
+        "id": "vehicle12",
+        "direction": {
+          "start": "south",
+          "end": "south"
+        },
+        "arrivedAtStep": 2
+      }
+    ],
+    "greenDirections": [
+      {
+        "start": "south",
+        "end": "north"
+      },
+      {
+        "start": "south",
+        "end": "west"
+      },
+      {
+        "start": "south",
+        "end": "south"
+      },
+      {
+        "start": "north",
+        "end": "west"
+      },
+      {
+        "start": "west",
+        "end": "south"
+      },
+      {
+        "start": "south",
+        "end": "east"
+      },
+      {
+        "start": "east",
+        "end": "north"
+      }
+    ]
+  },
+  {
+    "vehicles": [
+      {
+        "id": "vehicle102",
+        "direction": {
+          "start": "east",
+          "end": "south"
+        },
+        "arrivedAtStep": 0
+      },
+      {
+        "id": "vehicle12",
+        "direction": {
+          "start": "south",
+          "end": "south"
         },
         "arrivedAtStep": 2
       }

@@ -2,6 +2,30 @@
     "commands": [
         {
             "type": "addVehicle",
+            "vehicleId": "uturn1",
+            "startRoad": "north",
+            "endRoad": "north"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "uturn2",
+            "startRoad": "south",
+            "endRoad": "south"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "uturn3",
+            "startRoad": "west",
+            "endRoad": "west"
+        },
+        {
+            "type": "addVehicle",
+            "vehicleId": "uturn4",
+            "startRoad": "east",
+            "endRoad": "east"
+        },
+        {
+            "type": "addVehicle",
             "vehicleId": "vehicle1",
             "startRoad": "south",
             "endRoad": "north"
@@ -101,6 +125,24 @@
             "vehicleId": "vehicle13",
             "startRoad": "west",
             "endRoad": "north"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "step"
+        },
+        {
+            "type": "step"
         },
         {
             "type": "step"
