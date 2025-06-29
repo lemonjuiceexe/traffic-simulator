@@ -111,13 +111,13 @@ export function drawBackground(ctx: CanvasRenderingContext2D): void {
     );
     ctx.stroke();
 
-    const trafficLightSize: Vector = {
-        x: 60,
-        y: 70
-    };
-    const centerX: number = ctx.canvas.width / 2;
-    const centerY: number = ctx.canvas.height / 2;
-    const offset: number = 80;
+    // const trafficLightSize: Vector = {
+    //     x: 60,
+    //     y: 70
+    // };
+    // const centerX: number = ctx.canvas.width / 2;
+    // const centerY: number = ctx.canvas.height / 2;
+    // const offset: number = 80;
 
     // const trafficLightPositions: Vector[] = [
     //     { x: centerX - offset - trafficLightSize.x, y: centerY - trafficLightSize.y / 2 },

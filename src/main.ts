@@ -49,7 +49,8 @@ function waitForButtonClick(buttonElement: HTMLButtonElement): Promise<void> {
     );
 }
 function restartSimulation(): void {
-    currentStepSpan.textContent = "0";
+    const ctx = (document.querySelector("#canvas") as HTMLCanvasElement)!.getContext("2d")!;
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     nextStepButton.disabled = false;
     startSimulation();
 }
