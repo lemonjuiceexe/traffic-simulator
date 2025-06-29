@@ -177,6 +177,9 @@ export function getVehiclePath(ctx: CanvasRenderingContext2D, startRoad: Road, e
         (startRoad === "east" && endRoad === "north");
     const isUTurn = startRoad === endRoad;
     const isLeftTurn = !isStraightLine && !isRightTurn && !isUTurn;
+    const finalOffsetBase = 100;
+
+    let finalOffset = 0;
 
     const startPosition = calculateFirstVehiclePosition(ctx.canvas)[startRoad];
     const endPosition = calculateVehicleEndPosition(ctx.canvas)[endRoad];
@@ -186,6 +189,7 @@ export function getVehiclePath(ctx: CanvasRenderingContext2D, startRoad: Road, e
             (vehicleRadius * 2 + roadWidth / 2) * (["north", "west"].includes(startRoad) ? 1 : -1);
         const offset2 =
             (vehicleRadius * 2 + roadGap + roadWidth / 2) * (["north", "east"].includes(startRoad) ? 1 : -1);
+        finalOffset = finalOffsetBase * 2 * (["south", "east"].includes(startRoad) ? 1 : -1);
         let turnPosition1: PathSegment = {
             start: {
                 x: startPosition.x,
@@ -209,8 +213,8 @@ export function getVehiclePath(ctx: CanvasRenderingContext2D, startRoad: Road, e
             {
                 start: { ...turnPosition2.end },
                 end: {
-                    x: endPosition.x,
-                    y: endPosition.y
+                    x: endPosition.x + (["west", "east"].includes(endRoad) ? finalOffset : 0),
+                    y: endPosition.y + (["north", "south"].includes(endRoad) ? finalOffset : 0)
                 }
             }
         ];
@@ -219,10 +223,12 @@ export function getVehiclePath(ctx: CanvasRenderingContext2D, startRoad: Road, e
     let offset = 0;
     if (isRightTurn) {
         offset = (vehicleRadius * 2 + roadWidth / 2) * (["north", "west"].includes(startRoad) ? 1 : -1);
+        finalOffset = finalOffsetBase * 3 * (["north", "west"].includes(startRoad) ? 1 : -1);
     } else if (isLeftTurn) {
         offset =
             (vehicleRadius * 2 + roadGap + (roadWidth * 3) / 2) *
             (["north", "west"].includes(startRoad) ? 1 : -1);
+        finalOffset = finalOffsetBase * 1 * (["south", "east"].includes(startRoad) ? 1 : -1);
     }
     const turnPosition: PathSegment = {
         start: {
@@ -239,8 +245,8 @@ export function getVehiclePath(ctx: CanvasRenderingContext2D, startRoad: Road, e
         {
             start: { ...turnPosition.end },
             end: {
-                x: endPosition.x,
-                y: endPosition.y
+                x: endPosition.x + (["west", "east"].includes(endRoad) ? finalOffset : 0),
+                y: endPosition.y + (["north", "south"].includes(endRoad) ? finalOffset : 0)
             }
         }
     ];
