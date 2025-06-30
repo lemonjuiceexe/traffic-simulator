@@ -1,20 +1,18 @@
 import { type Road, type SimulationStep, type Vehicle } from "../server/types.ts";
 import {
     calculateFirstVehiclePosition,
-    calculateVehicleEndPosition,
     drawBackground,
     drawVehicle,
     getVehiclePath,
-    interpolateVehiclePosition,
     type PathSegment,
     type Vector,
     vehicleRadius
 } from "./draw.ts";
-import { directionsAreEqual, vehiclesAreEqual } from "../server/helpers.ts";
+import { directionsAreEqual } from "../server/helpers.ts";
 import "./style.css";
 
 const animationDuration = 1500;
-const delayBetweenSteps = 500;
+// const delayBetweenSteps = 500;
 const currentStepSpan: HTMLSpanElement = document.querySelector("#step")!;
 const nextStepButton: HTMLButtonElement = document.querySelector("#next-step-button")!;
 const restartButton: HTMLButtonElement = document.querySelector("#restart-button")!;
@@ -126,38 +124,66 @@ async function animateVehicles(
     movingVehicles: Vehicle[]
 ) {
     const paths: Record<string, PathSegment[]> = {};
-    let firstVehicles: Record<Road, Vehicle | null> = { north: null, south: null, east: null, west: null };
-    // let nextVehiclePosition: Record<Road, Vector> = calculateFirstVehiclePosition(ctx.canvas);
+    let vehicleIndexes: Record<Road, number> = { north: 0, south: 0, east: 0, west: 0 };
     let positionsOnRoad: Record<Road, Vector[]> = { north: [], south: [], east: [], west: [] };
     for (const vehicle of movingVehicles) {
         const startRoad = vehicle.direction.start;
-        if (!firstVehicles[startRoad]) {
-            firstVehicles[startRoad] = vehicle;
+        if (vehicleIndexes[startRoad] === 0) {
+            positionsOnRoad[startRoad].push(calculateFirstVehiclePosition(ctx.canvas)[startRoad]);
+        } else {
+            const previousPosition: Vector =
+                positionsOnRoad[startRoad][positionsOnRoad[startRoad].length - 1];
+            const nextPosition: Vector = {
+                x:
+                    previousPosition.x +
+                    (["north", "south"].includes(startRoad) ? 0 : 2 * vehicleRadius + 10) *
+                        (startRoad === "east" ? 1 : -1),
+                y:
+                    previousPosition.y +
+                    (["east", "west"].includes(startRoad) ? 0 : 2 * vehicleRadius + 10) *
+                        (startRoad === "south" ? 1 : -1)
+            };
+            positionsOnRoad[startRoad].push(nextPosition);
         }
-        positionsOnRoad[startRoad].push(calculateFirstVehiclePosition(ctx.canvas)[startRoad]);
+        vehicleIndexes[startRoad]++;
     }
+    vehicleIndexes = { north: 0, south: 0, east: 0, west: 0 };
     for (const vehicle of movingVehicles) {
-        const isFirstVehicle: boolean =
-            firstVehicles[vehicle.direction.start] !== null &&
-            vehiclesAreEqual(firstVehicles[vehicle.direction.start]!, vehicle);
-
-        if (isFirstVehicle) {
-            const [startRoad, endRoad] = [vehicle.direction.start, vehicle.direction.end];
+        const [startRoad, endRoad] = [vehicle.direction.start, vehicle.direction.end];
+        if (vehicleIndexes[startRoad] === 0) {
             paths[`${startRoad}-${endRoad}`] = getVehiclePath(ctx, startRoad, endRoad);
         } else {
-            const path: PathSegment[] = [{}];
+            paths[`${vehicle.id}`] = [
+                {
+                    start: positionsOnRoad[startRoad][vehicleIndexes[startRoad]],
+                    end: positionsOnRoad[startRoad][vehicleIndexes[startRoad] - 1]
+                }
+            ];
         }
+        vehicleIndexes[startRoad]++;
     }
 
     const startTime = performance.now();
     await new Promise<void>((resolve) => {
         function animateFrame(now: number) {
+            let firstVehicles: Record<Road, Vehicle | null> = {
+                north: null,
+                south: null,
+                east: null,
+                west: null
+            };
             const elapsed = now - startTime;
             const progress = Math.min(elapsed / animationDuration, 1);
             drawBackground(ctx);
             drawStationaryVehicles(ctx, step, new Set(movingVehicles));
             for (const vehicle of movingVehicles) {
-                const segments: PathSegment[] = paths[vehicle.direction.start + "-" + vehicle.direction.end];
+                const segments: PathSegment[] =
+                    firstVehicles[vehicle.direction.start] === null
+                        ? paths[vehicle.direction.start + "-" + vehicle.direction.end]
+                        : paths[vehicle.id];
+                if (firstVehicles[vehicle.direction.start] === null) {
+                    firstVehicles[vehicle.direction.start] = vehicle;
+                }
                 const segmentLengths: number[] = segments.map((segment) => {
                     const dx = segment.end.x - segment.start.x;
                     const dy = segment.end.y - segment.start.y;
