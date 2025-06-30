@@ -10,7 +10,7 @@ import {
     type Vector,
     vehicleRadius
 } from "./draw.ts";
-import { directionsAreEqual } from "../server/helpers.ts";
+import { directionsAreEqual, vehiclesAreEqual } from "../server/helpers.ts";
 import "./style.css";
 
 const animationDuration = 1500;
@@ -59,6 +59,7 @@ function restartSimulation(): void {
 async function renderStep(ctx: CanvasRenderingContext2D, step: SimulationStep) {
     const movingVehicles: Vehicle[] = [];
     let isFirstVehicle: Record<Road, boolean> = { north: true, south: true, east: true, west: true };
+    let movingRoads: Record<Road, boolean> = { north: false, south: false, east: false, west: false };
     for (const vehicle of step.vehicles) {
         const startRoad: Road = vehicle.direction.start;
         if (
@@ -67,9 +68,15 @@ async function renderStep(ctx: CanvasRenderingContext2D, step: SimulationStep) {
                 directionsAreEqual(greenDirection, vehicle.direction)
             )
         ) {
-            movingVehicles.push(vehicle);
+            movingRoads[startRoad] = true;
         }
         isFirstVehicle[startRoad] = false;
+    }
+    for (const vehicle of step.vehicles) {
+        const startRoad: Road = vehicle.direction.start;
+        if (movingRoads[startRoad]) {
+            movingVehicles.push(vehicle);
+        }
     }
     drawBackground(ctx);
     drawStationaryVehicles(ctx, step, new Set(movingVehicles));
@@ -119,10 +126,27 @@ async function animateVehicles(
     movingVehicles: Vehicle[]
 ) {
     const paths: Record<string, PathSegment[]> = {};
+    let firstVehicles: Record<Road, Vehicle | null> = { north: null, south: null, east: null, west: null };
+    // let nextVehiclePosition: Record<Road, Vector> = calculateFirstVehiclePosition(ctx.canvas);
+    let positionsOnRoad: Record<Road, Vector[]> = { north: [], south: [], east: [], west: [] };
     for (const vehicle of movingVehicles) {
         const startRoad = vehicle.direction.start;
-        const endRoad = vehicle.direction.end;
-        paths[startRoad + "-" + endRoad] = getVehiclePath(ctx, startRoad, endRoad);
+        if (!firstVehicles[startRoad]) {
+            firstVehicles[startRoad] = vehicle;
+        }
+        positionsOnRoad[startRoad].push(calculateFirstVehiclePosition(ctx.canvas)[startRoad]);
+    }
+    for (const vehicle of movingVehicles) {
+        const isFirstVehicle: boolean =
+            firstVehicles[vehicle.direction.start] !== null &&
+            vehiclesAreEqual(firstVehicles[vehicle.direction.start]!, vehicle);
+
+        if (isFirstVehicle) {
+            const [startRoad, endRoad] = [vehicle.direction.start, vehicle.direction.end];
+            paths[`${startRoad}-${endRoad}`] = getVehiclePath(ctx, startRoad, endRoad);
+        } else {
+            const path: PathSegment[] = [{}];
+        }
     }
 
     const startTime = performance.now();
@@ -158,7 +182,19 @@ async function animateVehicles(
                         distanceLeft -= segmentLengths[i];
                     }
                 }
-                drawVehicle(ctx, vehiclePosition.x, vehiclePosition.y, "#0f0");
+                drawVehicle(
+                    ctx,
+                    vehiclePosition.x,
+                    vehiclePosition.y,
+                    [
+                        firstVehicles.east,
+                        firstVehicles.west,
+                        firstVehicles.north,
+                        firstVehicles.south
+                    ].includes(vehicle)
+                        ? "#0f0"
+                        : "#00f"
+                );
             }
             if (progress < 1) {
                 requestAnimationFrame(animateFrame);
