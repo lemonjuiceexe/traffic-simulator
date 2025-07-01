@@ -74,6 +74,8 @@ The traffic management algorithm is inspired by [1]. It takes into account the n
 The `/server/directions.ts` file contains the definitions for non-conflicting directions. The assumption is that a vehicle can always turn right, similarly to  models described in [1], [2].
 
 ## Additional information
+In the visualisation, the color of a vehicle indicates whether it has a green or a red light. A small arrowhead indicates the direction that the vehicle is going towards.
+
 CI is set up using GitHub Actions to run tests on every push and pull request to the `main` branch. The tests are written in vitest and can be run locally using `npm run test`.
 
 ## Bibliography
