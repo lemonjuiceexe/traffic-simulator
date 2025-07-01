@@ -12,11 +12,20 @@ import { directionsAreEqual } from "../server/helpers.ts";
 import "./style.css";
 
 const animationDuration = 1500;
-// const delayBetweenSteps = 500;
+const delayBetweenSteps = 500;
 const currentStepSpan: HTMLSpanElement = document.querySelector("#step")!;
 const nextStepButton: HTMLButtonElement = document.querySelector("#next-step-button")!;
 const restartButton: HTMLButtonElement = document.querySelector("#restart-button")!;
+const playButton: HTMLButtonElement = document.querySelector("#play-button")!;
+const autoplayCheckbox: HTMLInputElement = document.querySelector("#autoplay-checkbox")!;
 restartButton.addEventListener("click", restartSimulation);
+playButton.addEventListener("click", togglePause);
+autoplayCheckbox.addEventListener("change", toggleAutoplay);
+autoplayCheckbox.checked = false;
+
+let paused: boolean = false;
+let autoplay: boolean = false;
+let restartScheduled: boolean = false;
 
 startSimulation();
 
@@ -29,29 +38,67 @@ function startSimulation(): void {
 }
 
 async function renderSimulation(data: SimulationStep[]): Promise<void> {
-    console.log(data);
     const canvas: HTMLCanvasElement = document.querySelector("#canvas")!;
     const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
+    drawBackground(ctx);
     for (let i: number = 0; i < data.length; i++) {
         const step: SimulationStep = data[i];
         currentStepSpan.textContent = `${i}`;
+        if (!autoplay) {
+            await waitForButtonClick([nextStepButton, autoplayCheckbox]);
+        } else {
+            await new Promise((r) => setTimeout(r, delayBetweenSteps));
+            await new Promise<void>(async (resolve) => {
+                if (!paused) resolve();
+                else {
+                    await waitForButtonClick([playButton, autoplayCheckbox]);
+                    resolve();
+                }
+            });
+        }
         await renderStep(ctx, step);
-        // await new Promise((r) => setTimeout(r, delayBetweenSteps));
-        await waitForButtonClick(nextStepButton);
     }
 }
-function waitForButtonClick(buttonElement: HTMLButtonElement): Promise<void> {
+function waitForButtonClick(buttons: (HTMLButtonElement | HTMLInputElement)[]): Promise<void> {
     return new Promise((resolve) =>
-        buttonElement.addEventListener("click", () => {
-            resolve();
-        })
+        buttons.forEach((buttonElement) =>
+            buttonElement.addEventListener("click", () => {
+                resolve();
+            })
+        )
     );
 }
 function restartSimulation(): void {
+    restartScheduled = true;
     const ctx = (document.querySelector("#canvas") as HTMLCanvasElement)!.getContext("2d")!;
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     nextStepButton.disabled = false;
+    autoplay = false;
+    autoplayCheckbox.checked = false;
     startSimulation();
+    restartScheduled = false;
+}
+function togglePause(): void {
+    paused = !paused;
+    if (paused) {
+        playButton.textContent = "Resume";
+    } else {
+        playButton.textContent = "Pause";
+    }
+}
+function toggleAutoplay(): void {
+    autoplay = !autoplay;
+    autoplayCheckbox.checked = autoplay;
+    if (autoplay) {
+        autoplayCheckbox.checked = true;
+        playButton.disabled = false;
+        nextStepButton.disabled = true;
+    } else {
+        autoplayCheckbox.checked = false;
+        playButton.disabled = true;
+        nextStepButton.disabled = false;
+    }
+    // restartSimulation();
 }
 
 async function renderStep(ctx: CanvasRenderingContext2D, step: SimulationStep) {
@@ -166,6 +213,10 @@ async function animateVehicles(
     const startTime = performance.now();
     await new Promise<void>((resolve) => {
         function animateFrame(now: number) {
+            if (restartScheduled) {
+                resolve();
+                return;
+            }
             let firstVehicles: Record<Road, Vehicle | null> = {
                 north: null,
                 south: null,
@@ -220,7 +271,7 @@ async function animateVehicles(
                         firstVehicles.south
                     ].includes(vehicle)
                         ? "#0f0"
-                        : "#00f"
+                        : "#f00"
                 );
             }
             if (progress < 1) {
