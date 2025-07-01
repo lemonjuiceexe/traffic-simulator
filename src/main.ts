@@ -98,7 +98,7 @@ function drawStationaryVehicles(
         const x: number = nextVehiclePosition[startRoad].x;
         const y: number = nextVehiclePosition[startRoad].y;
         if (!vehiclesToSkip.has(vehicle)) {
-            drawVehicle(ctx, x, y);
+            drawVehicle(ctx, x, y, vehicle.direction);
         }
         isFirstVehicle[startRoad] = false;
         switch (startRoad) {
@@ -212,6 +212,7 @@ async function animateVehicles(
                     ctx,
                     vehiclePosition.x,
                     vehiclePosition.y,
+                    vehicle.direction,
                     [
                         firstVehicles.east,
                         firstVehicles.west,

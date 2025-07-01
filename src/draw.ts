@@ -1,4 +1,4 @@
-import type { Road } from "../server/types.ts";
+import type { Road, Direction } from "../server/types.ts";
 
 export type Vector = {
     x: number;
@@ -54,10 +54,45 @@ export function calculateVehicleEndPosition(canvas: HTMLCanvasElement): Record<R
         }
     };
 }
-export function drawVehicle(ctx: CanvasRenderingContext2D, x: number, y: number, color: string = "#f00") {
+export function drawVehicle(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    direction: Direction,
+    color: string = "#f00"
+) {
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(x, y, vehicleRadius, 0, Math.PI * 2);
+    ctx.fill();
+    const arrowDirection: string = ["up", "right", "down", "left"][
+        ["north", "east", "south", "west"].indexOf(direction.end)
+    ];
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    switch (arrowDirection) {
+        case "up":
+            ctx.moveTo(x, y - vehicleRadius);
+            ctx.lineTo(x - vehicleRadius / 2, y - vehicleRadius / 2);
+            ctx.lineTo(x + vehicleRadius / 2, y - vehicleRadius / 2);
+            break;
+        case "down":
+            ctx.moveTo(x, y + vehicleRadius);
+            ctx.lineTo(x - vehicleRadius / 2, y + vehicleRadius / 2);
+            ctx.lineTo(x + vehicleRadius / 2, y + vehicleRadius / 2);
+            break;
+        case "left":
+            ctx.moveTo(x - vehicleRadius, y);
+            ctx.lineTo(x - vehicleRadius / 2, y - vehicleRadius / 2);
+            ctx.lineTo(x - vehicleRadius / 2, y + vehicleRadius / 2);
+            break;
+        case "right":
+            ctx.moveTo(x + vehicleRadius, y);
+            ctx.lineTo(x + vehicleRadius / 2, y - vehicleRadius / 2);
+            ctx.lineTo(x + vehicleRadius / 2, y + vehicleRadius / 2);
+            break;
+    }
+    ctx.closePath();
     ctx.fill();
 }
 
@@ -114,54 +149,6 @@ export function drawBackground(ctx: CanvasRenderingContext2D): void {
         ctx.canvas.height / 2 + roadGap / 2 + roadWidth
     );
     ctx.stroke();
-
-    // const trafficLightSize: Vector = {
-    //     x: 60,
-    //     y: 70
-    // };
-    // const centerX: number = ctx.canvas.width / 2;
-    // const centerY: number = ctx.canvas.height / 2;
-    // const offset: number = 80;
-
-    // const trafficLightPositions: Vector[] = [
-    //     { x: centerX - offset - trafficLightSize.x, y: centerY - trafficLightSize.y / 2 },
-    //     { x: centerX + offset, y: centerY - trafficLightSize.y / 2 },
-    //     { x: centerX - trafficLightSize.x / 2, y: centerY - offset - trafficLightSize.y },
-    //     { x: centerX - trafficLightSize.x / 2, y: centerY + offset }
-    // ];
-
-    // trafficLightPositions.forEach((pos) => {
-    //     // Draw traffic light box
-    //     ctx.fillStyle = "#333";
-    //     ctx.fillRect(pos.x, pos.y, trafficLightSize.x, trafficLightSize.y);
-    //
-    //     ["red", "yellow"].forEach((color, index) => {
-    //         ctx.fillStyle = color;
-    //         ctx.beginPath();
-    //         ctx.arc(
-    //             pos.x + trafficLightSize.x / 2,
-    //             pos.y + ((index + 1) * trafficLightSize.y) / 4,
-    //             Math.min(trafficLightSize.x, trafficLightSize.y) / 8,
-    //             0,
-    //             Math.PI * 2
-    //         );
-    //         ctx.fill();
-    //     });
-    //     // Draw three green lights: left, forward, right
-    //     const greenY = pos.y + (3 * trafficLightSize.y) / 4;
-    //     const greenRadius = Math.min(trafficLightSize.x, trafficLightSize.y) / 8;
-    //     const greenOffsets = [
-    //         trafficLightSize.x / 4, // left
-    //         trafficLightSize.x / 2, // forward
-    //         (3 * trafficLightSize.x) / 4 // right
-    //     ];
-    //     greenOffsets.forEach((offsetX) => {
-    //         ctx.fillStyle = "green";
-    //         ctx.beginPath();
-    //         ctx.arc(pos.x + offsetX, greenY, greenRadius, 0, Math.PI * 2);
-    //         ctx.fill();
-    //     });
-    // });
 }
 
 export function getVehiclePath(ctx: CanvasRenderingContext2D, startRoad: Road, endRoad: Road): PathSegment[] {
@@ -250,11 +237,4 @@ export function getVehiclePath(ctx: CanvasRenderingContext2D, startRoad: Road, e
             }
         }
     ];
-}
-
-export function interpolateVehiclePosition(start: Vector, end: Vector, t: number): Vector {
-    return {
-        x: start.x + (end.x - start.x) * t,
-        y: start.y + (end.y - start.y) * t
-    };
 }
