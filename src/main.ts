@@ -13,17 +13,59 @@ import "./style.css";
 
 const animationDuration = 1500;
 const delayBetweenSteps = 500;
-const currentStepSpan: HTMLSpanElement = document.querySelector("#step")!;
-const nextStepButton: HTMLButtonElement = document.querySelector("#next-step-button")!;
-const restartButton: HTMLButtonElement = document.querySelector("#restart-button")!;
-const autoplayCheckbox: HTMLInputElement = document.querySelector("#autoplay-checkbox")!;
-restartButton.addEventListener("click", restartSimulation);
-autoplayCheckbox.addEventListener("change", toggleAutoplay);
-autoplayCheckbox.checked = false;
+let currentStepSpan: HTMLSpanElement;
+let nextStepButton: HTMLButtonElement;
+let restartButton: HTMLButtonElement;
+let autoplayCheckbox: HTMLInputElement;
 
-let autoplay: boolean = false;
+export let autoplay: boolean = false;
 
-startSimulation();
+// Only run in browser, not during tests
+if (typeof window !== "undefined" && !import.meta.env?.TEST) {
+    initUI();
+    startSimulation();
+}
+
+export function initUI(): void {
+    currentStepSpan = document.querySelector("#step")!;
+    nextStepButton = document.querySelector("#next-step-button")!;
+    restartButton = document.querySelector("#restart-button")!;
+    autoplayCheckbox = document.querySelector("#autoplay-checkbox")!;
+    restartButton.addEventListener("click", restartSimulation);
+    autoplayCheckbox.addEventListener("change", toggleAutoplay);
+    autoplayCheckbox.checked = false;
+}
+export function waitForButtonClick(buttons: (HTMLButtonElement | HTMLInputElement)[]): Promise<void> {
+    return new Promise((resolve) =>
+        buttons.forEach((buttonElement) =>
+            buttonElement.addEventListener("click", () => {
+                resolve();
+            })
+        )
+    );
+}
+export function restartSimulation(): void {
+    const canvas = document.querySelector("#canvas") as HTMLCanvasElement;
+    const ctx = canvas.getContext("2d")!;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    nextStepButton.disabled = false;
+    autoplay = false;
+    autoplayCheckbox.checked = false;
+    autoplayCheckbox.disabled = false;
+    currentStepSpan.textContent = "0";
+    startSimulation();
+}
+export function toggleAutoplay(): void {
+    autoplay = !autoplay;
+    autoplayCheckbox.checked = autoplay;
+    if (autoplay) {
+        autoplayCheckbox.checked = true;
+        nextStepButton.disabled = true;
+    } else {
+        autoplayCheckbox.checked = false;
+        nextStepButton.disabled = false;
+    }
+}
 
 function startSimulation(): void {
     fetch("/output.json")
@@ -32,8 +74,7 @@ function startSimulation(): void {
             renderSimulation(data);
         });
 }
-
-async function renderSimulation(data: SimulationStep[]): Promise<void> {
+export async function renderSimulation(data: SimulationStep[]): Promise<void> {
     const canvas: HTMLCanvasElement = document.querySelector("#canvas")!;
     const ctx: CanvasRenderingContext2D = canvas.getContext("2d")!;
     drawBackground(ctx);
@@ -57,38 +98,8 @@ async function renderSimulation(data: SimulationStep[]): Promise<void> {
     }
     nextStepButton.disabled = true;
 }
-function waitForButtonClick(buttons: (HTMLButtonElement | HTMLInputElement)[]): Promise<void> {
-    return new Promise((resolve) =>
-        buttons.forEach((buttonElement) =>
-            buttonElement.addEventListener("click", () => {
-                resolve();
-            })
-        )
-    );
-}
-function restartSimulation(): void {
-    const ctx = (document.querySelector("#canvas") as HTMLCanvasElement)!.getContext("2d")!;
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    nextStepButton.disabled = false;
-    autoplay = false;
-    autoplayCheckbox.checked = false;
-    autoplayCheckbox.disabled = false;
-    currentStepSpan.textContent = "0";
-    startSimulation();
-}
-function toggleAutoplay(): void {
-    autoplay = !autoplay;
-    autoplayCheckbox.checked = autoplay;
-    if (autoplay) {
-        autoplayCheckbox.checked = true;
-        nextStepButton.disabled = true;
-    } else {
-        autoplayCheckbox.checked = false;
-        nextStepButton.disabled = false;
-    }
-}
 
-async function renderStep(ctx: CanvasRenderingContext2D, step: SimulationStep) {
+export async function renderStep(ctx: CanvasRenderingContext2D, step: SimulationStep) {
     restartButton.disabled = true;
     const movingVehicles: Vehicle[] = [];
     let isFirstVehicle: Record<Road, boolean> = { north: true, south: true, east: true, west: true };
@@ -117,7 +128,7 @@ async function renderStep(ctx: CanvasRenderingContext2D, step: SimulationStep) {
     if (!autoplay) restartButton.disabled = false;
 }
 
-function drawStationaryVehicles(
+export function drawStationaryVehicles(
     ctx: CanvasRenderingContext2D,
     step: SimulationStep,
     vehiclesToSkip: Set<Vehicle>
@@ -154,7 +165,7 @@ function drawStationaryVehicles(
     }
 }
 
-async function animateVehicles(
+export async function animateVehicles(
     ctx: CanvasRenderingContext2D,
     step: SimulationStep,
     movingVehicles: Vehicle[]

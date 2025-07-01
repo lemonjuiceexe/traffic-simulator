@@ -19,7 +19,7 @@ export default defineConfig({
         }
     ],
     test: {
-        environment: "node",
+        environment: "jsdom",
         reporters: ["default", "junit"],
         outputFile: "./junit.xml",
         includeConsoleOutput: false
