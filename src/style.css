@@ -1,19 +1,23 @@
 @import "./reset.css";
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
 
-:root{
+body {
 	font-family: 'Inconsolata', monospace;
 }
 #app{
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: center;
 	height: 100vh;
 	width: 100vw;
+	background-color: #DED3C4;
+
+	position: relative;
+	font-size: 30px;
 }
 canvas {
-	outline: 2px solid #000;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 15px;
 }
 h1{
 	position: absolute;
@@ -21,10 +25,46 @@ h1{
 	top: 10px;
 	font-size: 40px;
 }
-.desc{
+.control-panel{
 	position: absolute;
-	left: 10px;
-	top: 60px;
+	left: 2em;
+	top: 50%;
+	transform: translateY(-50%);
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 1em;
+	background-color: #F4EBD3;
+	border-radius: 15px;
+}
+button {
+	font-family: 'Inconsolata', monospace;
 	font-size: 20px;
-	color: #666;
+	background-color: #555879;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	padding: 10px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+button:hover {
+	background-color: #444466;
+}
+button:active {
+	background-color: #333355;
+}
+button:disabled {
+	background-color: #888888;
+	cursor: not-allowed;
+}
+input[type="checkbox"]{
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
+	cursor: pointer;
+}
+input[type="checkbox"]:checked {
+	background-color: #555879;
+	border-radius: 5px;
 }

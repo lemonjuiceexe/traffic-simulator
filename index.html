@@ -9,12 +9,16 @@
     <body>
         <div id="app">
             <h1>Traffic simulator</h1>
-            <p class="desc">Current step: <span id="step">1</span>
-                <button id="next-step-button">Next step</button>
-                <input type="checkbox" id="autoplay-checkbox" />
-                <label for="autoplay-checkbox">Auto play</label>
+            <div class="control-panel">
+                <p>Current step: <span id="step">1</span></p>
+                <div>
+                    <button id="next-step-button">Next step</button>
+                    <input type="checkbox" id="autoplay-checkbox" />
+                    <label for="autoplay-checkbox">Auto play</label>
+                </div>
                 <button id="restart-button">Reset</button>
-            </p>
+
+            </div>
             <canvas id="canvas" width="600" height="600"></canvas>
         </div>
         <script type="module" src="/src/main.ts"></script>
