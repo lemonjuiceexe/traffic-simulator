@@ -3,61 +3,51 @@
     {
       "leftVehicles": [
         "uturn3",
-        "uturn4"
+        "vehicle102"
       ]
     },
     {
       "leftVehicles": [
         "uturn1",
         "uturn2",
-        "vehicle5",
-        "vehicle7"
+        "vehicle5"
       ]
     },
     {
       "leftVehicles": [
-        "vehicle6",
-        "vehicle8"
-      ]
-    },
-    {
-      "leftVehicles": [
-        "vehicle1",
         "vehicle3",
-        "vehicle10"
+        "vehicle6"
       ]
     },
     {
       "leftVehicles": [
-        "vehicle9",
-        "vehicle13"
-      ]
-    },
-    {
-      "leftVehicles": [
-        "vehicle2",
-        "vehicle4"
-      ]
-    },
-    {
-      "leftVehicles": [
-        "vehicle100"
-      ]
-    },
-    {
-      "leftVehicles": [
-        "vehicle101"
-      ]
-    },
-    {
-      "leftVehicles": [
+        "vehicle10",
         "vehicle11"
       ]
     },
     {
       "leftVehicles": [
-        "vehicle102"
+        "vehicle4"
       ]
+    },
+    {
+      "leftVehicles": [
+        "vehicle13"
+      ]
+    },
+    {
+      "leftVehicles": [
+        "vehicle12"
+      ]
+    },
+    {
+      "leftVehicles": []
+    },
+    {
+      "leftVehicles": []
+    },
+    {
+      "leftVehicles": []
     }
   ]
 }
