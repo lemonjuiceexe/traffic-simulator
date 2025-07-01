@@ -49,6 +49,12 @@ async function renderSimulation(data: SimulationStep[]): Promise<void> {
         }
         await renderStep(ctx, step);
     }
+    if (autoplay) {
+        autoplay = false;
+        autoplayCheckbox.checked = false;
+        nextStepButton.disabled = false;
+        restartButton.disabled = false;
+    }
 }
 function waitForButtonClick(buttons: (HTMLButtonElement | HTMLInputElement)[]): Promise<void> {
     return new Promise((resolve) =>
