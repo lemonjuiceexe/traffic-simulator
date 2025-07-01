@@ -51,10 +51,11 @@ async function renderSimulation(data: SimulationStep[]): Promise<void> {
     }
     if (autoplay) {
         autoplay = false;
-        autoplayCheckbox.checked = false;
-        nextStepButton.disabled = false;
+        autoplayCheckbox.disabled = true;
         restartButton.disabled = false;
+        currentStepSpan.textContent = `${data.length}`;
     }
+    nextStepButton.disabled = true;
 }
 function waitForButtonClick(buttons: (HTMLButtonElement | HTMLInputElement)[]): Promise<void> {
     return new Promise((resolve) =>
@@ -71,6 +72,7 @@ function restartSimulation(): void {
     nextStepButton.disabled = false;
     autoplay = false;
     autoplayCheckbox.checked = false;
+    autoplayCheckbox.disabled = false;
     currentStepSpan.textContent = "0";
     startSimulation();
 }
@@ -84,7 +86,6 @@ function toggleAutoplay(): void {
         autoplayCheckbox.checked = false;
         nextStepButton.disabled = false;
     }
-    // restartSimulation();
 }
 
 async function renderStep(ctx: CanvasRenderingContext2D, step: SimulationStep) {
@@ -133,7 +134,7 @@ function drawStationaryVehicles(
         const x: number = nextVehiclePosition[startRoad].x;
         const y: number = nextVehiclePosition[startRoad].y;
         if (!vehiclesToSkip.has(vehicle)) {
-            drawVehicle(ctx, x, y, vehicle.direction);
+            drawVehicle(ctx, x, y, vehicle.direction, true);
         }
         isFirstVehicle[startRoad] = false;
         switch (startRoad) {
@@ -248,14 +249,12 @@ async function animateVehicles(
                     vehiclePosition.x,
                     vehiclePosition.y,
                     vehicle.direction,
-                    [
+                    ![
                         firstVehicles.east,
                         firstVehicles.west,
                         firstVehicles.north,
                         firstVehicles.south
                     ].includes(vehicle)
-                        ? "#0f0"
-                        : "#f00"
                 );
             }
             if (progress < 1) {

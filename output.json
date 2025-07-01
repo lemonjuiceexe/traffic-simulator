@@ -2,52 +2,37 @@
   "stepStatuses": [
     {
       "leftVehicles": [
-        "uturn3",
-        "vehicle102"
+        "uturn3"
       ]
     },
     {
       "leftVehicles": [
         "uturn1",
-        "uturn2",
         "vehicle5"
       ]
     },
     {
       "leftVehicles": [
-        "vehicle3",
+        "uturn2",
         "vehicle6"
       ]
     },
     {
       "leftVehicles": [
-        "vehicle10",
-        "vehicle11"
+        "vehicle3",
+        "vehicle10"
       ]
     },
     {
       "leftVehicles": [
-        "vehicle4"
-      ]
-    },
-    {
-      "leftVehicles": [
+        "vehicle102",
         "vehicle13"
       ]
     },
     {
       "leftVehicles": [
-        "vehicle12"
+        "vehicle11"
       ]
-    },
-    {
-      "leftVehicles": []
-    },
-    {
-      "leftVehicles": []
-    },
-    {
-      "leftVehicles": []
     }
   ]
 }

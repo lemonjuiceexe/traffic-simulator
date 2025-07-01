@@ -68,3 +68,11 @@ input[type="checkbox"]:checked {
 	background-color: #555879;
 	border-radius: 5px;
 }
+input[type="checkbox"]:disabled {
+	background-color: #888888;
+	cursor: not-allowed;
+}
+input[type="checkbox"]:disabled + label{
+	color: #888888;
+	cursor: not-allowed;
+}

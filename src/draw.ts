@@ -12,6 +12,10 @@ export type PathSegment = {
 const roadWidth: number = 60;
 const roadGap: number = 40;
 export const vehicleRadius: number = 15;
+const redVehicleColor = "#BE3D2A";
+const grassColor = "#88C273";
+const greenVehicleColor = "#A0C878";
+const roadColor = "#555879";
 
 export function calculateFirstVehiclePosition(canvas: HTMLCanvasElement): Record<Road, Vector> {
     return {
@@ -59,9 +63,9 @@ export function drawVehicle(
     x: number,
     y: number,
     direction: Direction,
-    color: string = "#f00"
+    stationary: boolean
 ) {
-    ctx.fillStyle = color;
+    ctx.fillStyle = stationary ? redVehicleColor : greenVehicleColor;
     ctx.beginPath();
     ctx.arc(x, y, vehicleRadius, 0, Math.PI * 2);
     ctx.fill();
@@ -97,10 +101,10 @@ export function drawVehicle(
 }
 
 export function drawBackground(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = "#2b931f";
+    ctx.fillStyle = grassColor;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     // roads
-    ctx.fillStyle = "#555";
+    ctx.fillStyle = roadColor;
     ctx.fillRect(0, ctx.canvas.height / 2 - roadGap / 2 - roadWidth, ctx.canvas.width, roadWidth);
     ctx.fillRect(0, ctx.canvas.height / 2 + roadGap / 2, ctx.canvas.width, roadWidth);
     ctx.fillRect(ctx.canvas.width / 2 - roadGap / 2 - roadWidth, 0, roadWidth, ctx.canvas.height);
