@@ -15,9 +15,7 @@ const otherAllowedDirections: Direction[][] = [
     ],
     [
         { start: "west", end: "north" },
-        { start: "west", end: "west" },
-        { start: "east", end: "south" },
-        { start: "east", end: "east" }
+        { start: "east", end: "south" }
     ],
     [
         { start: "west", end: "east" },
@@ -34,9 +32,7 @@ const otherAllowedDirections: Direction[][] = [
     ],
     [
         { start: "south", end: "west" },
-        { start: "south", end: "south" },
-        { start: "north", end: "east" },
-        { start: "north", end: "north" }
+        { start: "north", end: "east" }
     ],
     [
         { start: "east", end: "west" },
