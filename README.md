@@ -1,4 +1,7 @@
 # Traffic simulator
+![CI](https://github.com/lemonjuiceexe/traffic-simulator/actions/workflows/ci.yml/badge.svg)
+![Code style](https://img.shields.io/badge/code%20style-prettier-ff69b4.svg)
+
 This is a simple simulation of a traffic management system on a four-way intersection. Both server and client are written in TypeScript. In it's current state it is not a production-ready application.
 ## Installation
 Make sure you have Node.js and npm installed. Then clone the repository and install the dependencies:
@@ -77,7 +80,7 @@ The `/server/directions.ts` file contains the definitions for non-conflicting di
 In the visualisation, the color of a vehicle indicates whether it has a green or a red light. A small arrowhead indicates the direction that the vehicle is going towards.
 
 CI is set up using GitHub Actions to run tests on every push and pull request to the `main` branch. The tests are written in vitest and can be run locally using `npm run test`.
-
+You can run `npm run test:coverage` to generate a coverage report.
 ## Bibliography
 [1] Rida, N., Ouadoud, M., Hasbi, A., & Chebli, S. (2018). Adaptive Traffic Light Control System Using Wireless Sensors Networks. 2018 IEEE 5th International Congress on Information Science and Technology (CiSt). doi:10.1109/cist.2018.8596620 
 
