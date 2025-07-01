@@ -16,16 +16,12 @@ const delayBetweenSteps = 500;
 const currentStepSpan: HTMLSpanElement = document.querySelector("#step")!;
 const nextStepButton: HTMLButtonElement = document.querySelector("#next-step-button")!;
 const restartButton: HTMLButtonElement = document.querySelector("#restart-button")!;
-const playButton: HTMLButtonElement = document.querySelector("#play-button")!;
 const autoplayCheckbox: HTMLInputElement = document.querySelector("#autoplay-checkbox")!;
 restartButton.addEventListener("click", restartSimulation);
-playButton.addEventListener("click", togglePause);
 autoplayCheckbox.addEventListener("change", toggleAutoplay);
 autoplayCheckbox.checked = false;
 
-let paused: boolean = false;
 let autoplay: boolean = false;
-let restartScheduled: boolean = false;
 
 startSimulation();
 
@@ -46,15 +42,10 @@ async function renderSimulation(data: SimulationStep[]): Promise<void> {
         currentStepSpan.textContent = `${i}`;
         if (!autoplay) {
             await waitForButtonClick([nextStepButton, autoplayCheckbox]);
-        } else {
+        }
+        // not equivalent to else{} because the state of autoplay can change
+        if (autoplay) {
             await new Promise((r) => setTimeout(r, delayBetweenSteps));
-            await new Promise<void>(async (resolve) => {
-                if (!paused) resolve();
-                else {
-                    await waitForButtonClick([playButton, autoplayCheckbox]);
-                    resolve();
-                }
-            });
         }
         await renderStep(ctx, step);
     }
@@ -69,39 +60,29 @@ function waitForButtonClick(buttons: (HTMLButtonElement | HTMLInputElement)[]): 
     );
 }
 function restartSimulation(): void {
-    restartScheduled = true;
     const ctx = (document.querySelector("#canvas") as HTMLCanvasElement)!.getContext("2d")!;
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     nextStepButton.disabled = false;
     autoplay = false;
     autoplayCheckbox.checked = false;
+    currentStepSpan.textContent = "0";
     startSimulation();
-    restartScheduled = false;
-}
-function togglePause(): void {
-    paused = !paused;
-    if (paused) {
-        playButton.textContent = "Resume";
-    } else {
-        playButton.textContent = "Pause";
-    }
 }
 function toggleAutoplay(): void {
     autoplay = !autoplay;
     autoplayCheckbox.checked = autoplay;
     if (autoplay) {
         autoplayCheckbox.checked = true;
-        playButton.disabled = false;
         nextStepButton.disabled = true;
     } else {
         autoplayCheckbox.checked = false;
-        playButton.disabled = true;
         nextStepButton.disabled = false;
     }
     // restartSimulation();
 }
 
 async function renderStep(ctx: CanvasRenderingContext2D, step: SimulationStep) {
+    restartButton.disabled = true;
     const movingVehicles: Vehicle[] = [];
     let isFirstVehicle: Record<Road, boolean> = { north: true, south: true, east: true, west: true };
     let movingRoads: Record<Road, boolean> = { north: false, south: false, east: false, west: false };
@@ -126,6 +107,7 @@ async function renderStep(ctx: CanvasRenderingContext2D, step: SimulationStep) {
     drawBackground(ctx);
     drawStationaryVehicles(ctx, step, new Set(movingVehicles));
     await animateVehicles(ctx, step, movingVehicles);
+    if (!autoplay) restartButton.disabled = false;
 }
 
 function drawStationaryVehicles(
@@ -213,10 +195,6 @@ async function animateVehicles(
     const startTime = performance.now();
     await new Promise<void>((resolve) => {
         function animateFrame(now: number) {
-            if (restartScheduled) {
-                resolve();
-                return;
-            }
             let firstVehicles: Record<Road, Vehicle | null> = {
                 north: null,
                 south: null,
